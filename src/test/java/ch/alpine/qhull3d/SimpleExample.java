@@ -26,7 +26,7 @@ class SimpleExample {
       for (int k = 0; k < faceIndices[i].length; k++) {
         System.out.print(faceIndices[i][k] + " ");
       }
-      System.out.println("");
+      System.out.println();
     }
   }
 }

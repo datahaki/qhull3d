@@ -304,9 +304,7 @@ public class QuickHull3DTest {
     int numv = coords.length / 3;
     int[][] faces = hull.getFaces();
     double[] coordsx = new double[coords.length + faces.length * 3];
-    for (int i = 0; i < coords.length; i++) {
-      coordsx[i] = coords[i];
-    }
+    System.arraycopy(coords, 0, coordsx, 0, coords.length);
     double[] lam = new double[3];
     double eps = hull.getDistanceTolerance();
     for (int i = 0; i < faces.length; i++) {

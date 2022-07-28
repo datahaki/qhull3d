@@ -13,6 +13,7 @@ package ch.alpine.qhull3d;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -299,7 +300,7 @@ public class QuickHull3D {
       wrote = true;
     }
     if (wrote) {
-      System.out.println("");
+      System.out.println();
     }
   }
 
@@ -398,9 +399,7 @@ public class QuickHull3D {
     if (pointBuffer.length < nump) {
       Vertex[] newBuffer = new Vertex[nump];
       vertexPointIndices = new int[nump];
-      for (int i = 0; i < pointBuffer.length; i++) {
-        newBuffer[i] = pointBuffer[i];
-      }
+      System.arraycopy(pointBuffer, 0, newBuffer, 0, pointBuffer.length);
       for (int i = pointBuffer.length; i < nump; i++) {
         newBuffer[i] = new Vertex();
       }
@@ -563,9 +562,7 @@ public class QuickHull3D {
         tris[i + 1].getEdge(2).setOpposite(tris[0].getEdge((3 - i) % 3));
       }
     }
-    for (int i = 0; i < 4; i++) {
-      faces.add(tris[i]);
-    }
+    faces.addAll(Arrays.asList(tris).subList(0, 4));
     for (int i = 0; i < numPoints; i++) {
       Vertex v = pointBuffer[i];
       if (v == vtx[0] || v == vtx[1] || v == vtx[2] || v == vtx[3]) {
@@ -630,9 +627,7 @@ public class QuickHull3D {
    * @return vertex indices with respect to the original points */
   public int[] getVertexPointIndices() {
     int[] indices = new int[numVertices];
-    for (int i = 0; i < numVertices; i++) {
-      indices[i] = vertexPointIndices[i];
-    }
+    System.arraycopy(vertexPointIndices, 0, indices, 0, numVertices);
     return indices;
   }
 
@@ -746,7 +741,7 @@ public class QuickHull3D {
       for (int index : indices) {
         ps.print(" " + index);
       }
-      ps.println("");
+      ps.println();
     }
   }
 
