@@ -17,8 +17,7 @@ class SimpleExample {
     hull.build(points);
     System.out.println("Vertices:");
     Point3d[] vertices = hull.getVertices();
-    for (int i = 0; i < vertices.length; i++) {
-      Point3d pnt = vertices[i];
+    for (Point3d pnt : vertices) {
       System.out.println(pnt.x + " " + pnt.y + " " + pnt.z);
     }
     System.out.println("Faces:");

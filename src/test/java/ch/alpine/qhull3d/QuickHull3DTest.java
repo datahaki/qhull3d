@@ -29,17 +29,17 @@ import java.util.Random;
  * @author John E. Lloyd, Fall 2004 */
 public class QuickHull3DTest {
   static private final double DOUBLE_PREC = 2.2204460492503131e-16;
-  static boolean triangulate = false;
+  static final boolean triangulate = false;
   static boolean doTesting = true;
   static boolean doTiming = false;
-  static boolean debugEnable = false;
+  static final boolean debugEnable = false;
   static final int NO_DEGENERACY = 0;
   static final int EDGE_DEGENERACY = 1;
   static final int VERTEX_DEGENERACY = 2;
-  Random rand; // random number generator
-  static boolean testRotation = true;
-  static int degeneracyTest = VERTEX_DEGENERACY;
-  static double epsScale = 2.0;
+  final Random rand; // random number generator
+  static final boolean testRotation = true;
+  static final int degeneracyTest = VERTEX_DEGENERACY;
+  static final double epsScale = 2.0;
 
   /** Creates a testing object. */
   public QuickHull3DTest() {
@@ -254,14 +254,12 @@ public class QuickHull3DTest {
     // translate face indices back into original indices
     Point3d[] pnts = hull.getVertices();
     int[] vtxIndices = hull.getVertexPointIndices();
-    for (int j = 0; j < faceIndices.length; j++) {
-      int[] idxs = faceIndices[j];
+    for (int[] idxs : faceIndices) {
       for (int k = 0; k < idxs.length; k++) {
         idxs[k] = vtxIndices[idxs[k]];
       }
     }
-    for (int i = 0; i < checkFaces.length; i++) {
-      int[] cf = checkFaces[i];
+    for (int[] cf : checkFaces) {
       int j;
       for (j = 0; j < faceIndices.length; j++) {
         if (faceIndices[j] != null) {
@@ -273,8 +271,8 @@ public class QuickHull3DTest {
       }
       if (j == faceIndices.length) {
         String s = "";
-        for (int k = 0; k < cf.length; k++) {
-          s += cf[k] + " ";
+        for (int value : cf) {
+          s += value + " ";
         }
         throw new Exception("Error: face " + s + " not found");
       }
@@ -332,7 +330,7 @@ public class QuickHull3DTest {
     return coordsx;
   }
 
-  void degenerateTest(QuickHull3D hull, double[] coords) throws Exception {
+  void degenerateTest(QuickHull3D hull, double[] coords) {
     double[] coordsx = addDegeneracy(degeneracyTest, coords, hull);
     QuickHull3D xhull = new QuickHull3D();
     xhull.setDebug(debugEnable);
@@ -411,8 +409,7 @@ public class QuickHull3DTest {
     double[] xcoords = new double[coords.length];
     singleTest(coords, checkFaces);
     if (testRotation) {
-      for (int i = 0; i < rpyList.length; i++) {
-        double[] rpy = rpyList[i];
+      for (double[] rpy : rpyList) {
         rotateCoords(xcoords, coords, Math.toRadians(rpy[0]), Math.toRadians(rpy[1]), Math.toRadians(rpy[2]));
         singleTest(xcoords, checkFaces);
       }
@@ -503,14 +500,4 @@ public class QuickHull3DTest {
     }
   }
 
-  /** Runs a set of tests on the QuickHull3D class, and
-   * prints <code>Passed</code> if all is well.
-   * Otherwise, an error message and stack trace
-   * are printed.
-   *
-   * <p>If the option <code>-timing</code> is supplied,
-   * then timing information is produced instead. */
-//  public static void main(String[] args) {
-//    
-//  }
 }

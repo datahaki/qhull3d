@@ -75,9 +75,7 @@ public class Vector3d {
    * Elements 0, 1, and 2 correspond to x, y, and z.
    *
    * @param i element index
-   * @param value element value
-   * @return element value throws ArrayIndexOutOfBoundsException
-   * if i is not in the range 0 to 2. */
+   * @param value element value */
   public void set(int i, double value) {
     switch (i) {
     case 0: {

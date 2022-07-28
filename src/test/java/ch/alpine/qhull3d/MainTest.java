@@ -17,8 +17,5 @@ class MainTest {
     // }
     // if (doTesting) {
     tester.explicitAndRandomTests();
-    // if (doTiming) {
-    // tester.timingTests();
-    // }
   }
 }

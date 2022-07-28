@@ -21,9 +21,9 @@ package ch.alpine.qhull3d;
  * @author John E. Lloyd, Fall 2004 */
 class Face {
   HalfEdge he0;
-  private Vector3d normal;
+  private final Vector3d normal;
   double area;
-  private Point3d centroid;
+  private final Point3d centroid;
   double planeOffset;
   int index;
   int numVerts;
@@ -153,8 +153,8 @@ class Face {
   public static Face create(Vertex[] vtxArray, int[] indices) {
     Face face = new Face();
     HalfEdge hePrev = null;
-    for (int i = 0; i < indices.length; i++) {
-      HalfEdge he = new HalfEdge(vtxArray[indices[i]], face);
+    for (int j : indices) {
+      HalfEdge he = new HalfEdge(vtxArray[j], face);
       if (hePrev != null) {
         he.setPrev(hePrev);
         hePrev.setNext(he);

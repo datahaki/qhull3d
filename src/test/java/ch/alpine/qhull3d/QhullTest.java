@@ -15,13 +15,9 @@ class QhullTest {
       double[] pnts = tester.randomCubedPoints(100, 1.0, 0.5);
 //      hull.setFromQhull(pnts, pnts.length / 3, /* triangulated= */false);
       pnts = tester.addDegeneracy(QuickHull3DTest.VERTEX_DEGENERACY, pnts, hull);
-      // hull = new QuickHull3D ();
-//      hull.setFromQhull(pnts, pnts.length / 3, /* triangulated= */true);
       if (!hull.check(System.out)) {
         System.out.println("failed for qhull triangulated");
       }
-      // hull = new QuickHull3D ();
-//      hull.setFromQhull(pnts, pnts.length / 3, /* triangulated= */false);
       if (!hull.check(System.out)) {
         System.out.println("failed for qhull regular");
       }
