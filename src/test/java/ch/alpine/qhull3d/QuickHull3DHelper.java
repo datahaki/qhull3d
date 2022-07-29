@@ -282,7 +282,7 @@ public class QuickHull3DHelper {
   void singleTest(double[] coords, int[][] checkFaces) throws Exception {
     QuickHull3D hull = new QuickHull3D();
     hull.setDebug(debugEnable);
-    hull.build(coords, coords.length / 3);
+    hull.build(coords);
     if (triangulate) {
       hull.triangulate();
     }
@@ -331,7 +331,7 @@ public class QuickHull3DHelper {
     QuickHull3D xhull = new QuickHull3D();
     xhull.setDebug(debugEnable);
     try {
-      xhull.build(coordsx, coordsx.length / 3);
+      xhull.build(coordsx);
       if (triangulate) {
         xhull.triangulate();
       }

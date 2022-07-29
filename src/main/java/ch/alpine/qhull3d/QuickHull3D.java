@@ -29,7 +29,7 @@ import java.util.List;
  *
  * <p>A hull is constructed by providing a set of points
  * to either a constructor or a
- * {@link #build(Point3d[]) build} method. After
+ * build method. After
  * the hull is built, its vertices and faces can be retrieved
  * using {@link #getVertices()
  * getVertices} and {@link #getFaces() getFaces}.
@@ -232,35 +232,6 @@ public class QuickHull3D {
     return null;
   }
 
-  /** Creates an empty convex hull object. */
-  public QuickHull3D() {
-  }
-
-  /** Creates a convex hull object and initializes it to the convex hull
-   * of a set of points whose coordinates are given by an
-   * array of doubles.
-   *
-   * @param coords x, y, and z coordinates of each input
-   * point. The length of this array will be three times
-   * the the number of input points.
-   * @throws IllegalArgumentException the number of input points is less
-   * than four, or the points appear to be coincident, colinear, or
-   * coplanar. */
-  public QuickHull3D(double[] coords) throws IllegalArgumentException {
-    build(coords, coords.length / 3);
-  }
-
-  /** Creates a convex hull object and initializes it to the convex hull
-   * of a set of points.
-   *
-   * @param points input points.
-   * @throws IllegalArgumentException the number of input points is less
-   * than four, or the points appear to be coincident, colinear, or
-   * coplanar. */
-  public QuickHull3D(Point3d[] points) throws IllegalArgumentException {
-    build(points, points.length);
-  }
-
   private HalfEdge findHalfEdge(Vertex tail, Vertex head) {
     // brute force ... OK, since setHull is not used much
     for (Face face : faces) {
@@ -314,7 +285,7 @@ public class QuickHull3D {
    * than four or greater than 1/3 the length of <code>coords</code>,
    * or the points appear to be coincident, colinear, or
    * coplanar. */
-  public void build(double[] coords, int nump) throws IllegalArgumentException {
+  private void build(double[] coords, int nump) throws IllegalArgumentException {
     if (nump < 4) {
       throw new IllegalArgumentException("Less than four input points specified");
     }
@@ -323,35 +294,6 @@ public class QuickHull3D {
     }
     initBuffers(nump);
     setPoints(coords, nump);
-    buildHull();
-  }
-
-  /** Constructs the convex hull of a set of points.
-   *
-   * @param points input points
-   * @throws IllegalArgumentException the number of input points is less
-   * than four, or the points appear to be coincident, colinear, or
-   * coplanar. */
-  public void build(Point3d[] points) throws IllegalArgumentException {
-    build(points, points.length);
-  }
-
-  /** Constructs the convex hull of a set of points.
-   *
-   * @param points input points
-   * @param nump number of input points
-   * @throws IllegalArgumentException the number of input points is less
-   * than four or greater then the length of <code>points</code>, or the
-   * points appear to be coincident, colinear, or coplanar. */
-  public void build(Point3d[] points, int nump) throws IllegalArgumentException {
-    if (nump < 4) {
-      throw new IllegalArgumentException("Less than four input points specified");
-    }
-    if (points.length < nump) {
-      throw new IllegalArgumentException("Point array too small for specified number of points");
-    }
-    initBuffers(nump);
-    setPoints(points, nump);
     buildHull();
   }
 

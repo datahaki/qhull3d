@@ -18,13 +18,13 @@ class QhullTest {
         System.out.println("failed for qhull regular");
       }
       // hull = new QuickHull3D ();
-      hull.build(pnts, pnts.length / 3);
+      hull.build(pnts);
       hull.triangulate();
       if (!hull.check(System.out)) {
         System.out.println("failed for QuickHull3D triangulated");
       }
       // hull = new QuickHull3D ();
-      hull.build(pnts, pnts.length / 3);
+      hull.build(pnts);
       if (!hull.check(System.out)) {
         System.out.println("failed for QuickHull3D regular");
       }
