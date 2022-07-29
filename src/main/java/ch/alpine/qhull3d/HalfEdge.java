@@ -125,8 +125,9 @@ class HalfEdge {
   public String getVertexString() {
     if (tail() != null) {
       return "" + tail().index + "-" + head().index;
+    } else {
+      return "?-" + head().index;
     }
-    return "?-" + head().index;
   }
 
   /** Returns the length of this half-edge.
@@ -135,8 +136,9 @@ class HalfEdge {
   public double length() {
     if (tail() != null) {
       return head().pnt.distance(tail().pnt);
+    } else {
+      return -1;
     }
-    return -1;
   }
 
   /** Returns the length squared of this half-edge.
@@ -145,8 +147,9 @@ class HalfEdge {
   public double lengthSquared() {
     if (tail() != null) {
       return head().pnt.distanceSquared(tail().pnt);
+    } else {
+      return -1;
     }
-    return -1;
   }
   // /**
   // * Computes nrml . (del0 X del1), where del0 and del1
