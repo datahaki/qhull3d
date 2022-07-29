@@ -8,3 +8,30 @@ The modifications include
 * suggestions by Eclipse IDE
 * reordering of functions inside classes
 * strict separation of main and test scope
+
+## Integration
+
+From time to time, a version is deployed and made available for maven integration. Specify `repository` and `dependency` of the library `qhull3d` in the `pom.xml` file of your maven project:
+
+```xml
+<dependencies>
+  <!-- other dependencies -->
+  <dependency>
+    <groupId>ch.alpine</groupId>
+    <artifactId>qhull3d</artifactId>
+    <version>0.0.1</version>
+  </dependency>
+</dependencies>
+
+<repositories>
+  <!-- other repositories -->
+  <repository>
+    <id>qhull3d-mvn-repo</id>
+    <url>https://raw.github.com/datahaki/qhull3d/mvn-repo/</url>
+    <snapshots>
+      <enabled>true</enabled>
+      <updatePolicy>always</updatePolicy>
+    </snapshots>
+  </repository>
+</repositories>
+```
