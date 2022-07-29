@@ -109,7 +109,7 @@ public class QuickHull3DHelper {
     double[] coords = new double[num * 3];
     Point3d pnt = new Point3d();
     Point3d base = new Point3d();
-    base.setRandom(-1, 1, rand);
+    QuickHull3DHelper.setRandom(base, -1, 1, rand);
     double tol = DOUBLE_PREC;
     if (dimen == 0) {
       for (int i = 0; i < num; i++) {
@@ -121,7 +121,7 @@ public class QuickHull3DHelper {
       }
     } else if (dimen == 1) {
       Vector3d u = new Vector3d();
-      u.setRandom(-1, 1, rand);
+      QuickHull3DHelper.setRandom(u, -1, 1, rand);
       u.normalize();
       for (int i = 0; i < num; i++) {
         double a = 2 * (rand.nextDouble() - 0.5);
@@ -135,11 +135,11 @@ public class QuickHull3DHelper {
     } else // dimen == 2
     {
       Vector3d nrm = new Vector3d();
-      nrm.setRandom(-1, 1, rand);
+      QuickHull3DHelper.setRandom(nrm, -1, 1, rand);
       nrm.normalize();
       for (int i = 0; i < num; i++) { // compute a random point and project it to the plane
         Vector3d perp = new Vector3d();
-        pnt.setRandom(-1, 1, rand);
+        QuickHull3DHelper.setRandom(pnt, -1, 1, rand);
         perp.scale(pnt.dot(nrm), nrm);
         pnt.sub(perp);
         pnt.add(base);
@@ -162,7 +162,7 @@ public class QuickHull3DHelper {
     double[] coords = new double[num * 3];
     Point3d pnt = new Point3d();
     for (int i = 0; i < num;) {
-      pnt.setRandom(-radius, radius, rand);
+      QuickHull3DHelper.setRandom(pnt, -radius, radius, rand);
       if (pnt.norm() <= radius) {
         coords[i * 3 + 0] = pnt.x;
         coords[i * 3 + 1] = pnt.y;
@@ -493,5 +493,19 @@ public class QuickHull3DHelper {
       t1 = System.currentTimeMillis();
       System.out.println(n + " points: " + (t1 - t0) / (double) cnt + " msec");
     }
+  }
+
+  /** Sets the elements of this vector to uniformly distributed
+   * random values in a specified range, using a supplied
+   * random number generator.
+   *
+   * @param lower lower random value (inclusive)
+   * @param upper upper random value (exclusive)
+   * @param generator random number generator */
+  public static void setRandom(Vector3d v, double lower, double upper, Random generator) {
+    double range = upper - lower;
+    v.x = generator.nextDouble() * range + lower;
+    v.y = generator.nextDouble() * range + lower;
+    v.z = generator.nextDouble() * range + lower;
   }
 }

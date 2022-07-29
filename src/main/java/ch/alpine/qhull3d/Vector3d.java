@@ -10,8 +10,6 @@
  * software. */
 package ch.alpine.qhull3d;
 
-import java.util.Random;
-
 /** A three-element vector. This class is actually a reduced version of the
  * Vector3d class contained in the author's matlib package (which was partly
  * inspired by javax.vecmath). Only a mininal number of methods
@@ -20,7 +18,7 @@ import java.util.Random;
  * @author John E. Lloyd, Fall 2004 */
 public class Vector3d {
   /** Precision of a double. */
-  static private final double DOUBLE_PREC = 2.2204460492503131e-16;
+  private static final double DOUBLE_PREC = 2.2204460492503131e-16;
   /** First element */
   public double x;
   /** Second element */
@@ -55,20 +53,12 @@ public class Vector3d {
    * @return element value throws ArrayIndexOutOfBoundsException
    * if i is not in the range 0 to 2. */
   public double get(int i) {
-    switch (i) {
-    case 0 -> {
-      return x;
-    }
-    case 1 -> {
-      return y;
-    }
-    case 2 -> {
-      return z;
-    }
-    default -> {
-      throw new ArrayIndexOutOfBoundsException(i);
-    }
-    }
+    return switch (i) {
+    case 0 -> x;
+    case 1 -> y;
+    case 2 -> z;
+    default -> throw new ArrayIndexOutOfBoundsException(i);
+    };
   }
 
   /** Sets a single element of this vector.
@@ -78,21 +68,10 @@ public class Vector3d {
    * @param value element value */
   public void set(int i, double value) {
     switch (i) {
-    case 0 -> {
-      x = value;
-      break;
-    }
-    case 1 -> {
-      y = value;
-      break;
-    }
-    case 2 -> {
-      z = value;
-      break;
-    }
-    default -> {
-      throw new ArrayIndexOutOfBoundsException(i);
-    }
+    case 0 -> x = value;
+    case 1 -> y = value;
+    case 2 -> z = value;
+    default -> throw new ArrayIndexOutOfBoundsException(i);
     }
   }
 
@@ -197,7 +176,7 @@ public class Vector3d {
     double dx = x - v.x;
     double dy = y - v.y;
     double dz = z - v.z;
-    return (dx * dx + dy * dy + dz * dz);
+    return dx * dx + dy * dy + dz * dz;
   }
 
   /** Returns the dot product of this vector and v1.
@@ -250,20 +229,6 @@ public class Vector3d {
     x = tmpx;
     y = tmpy;
     z = tmpz;
-  }
-
-  /** Sets the elements of this vector to uniformly distributed
-   * random values in a specified range, using a supplied
-   * random number generator.
-   *
-   * @param lower lower random value (inclusive)
-   * @param upper upper random value (exclusive)
-   * @param generator random number generator */
-  protected void setRandom(double lower, double upper, Random generator) {
-    double range = upper - lower;
-    x = generator.nextDouble() * range + lower;
-    y = generator.nextDouble() * range + lower;
-    z = generator.nextDouble() * range + lower;
   }
 
   /** Returns a string representation of this vector, consisting

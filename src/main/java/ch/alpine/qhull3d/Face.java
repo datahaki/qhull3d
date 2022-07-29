@@ -312,8 +312,7 @@ class Face {
             + hedgeOpp.getOpposite().getVertexString());
       }
       if (hedgeOpp.head() != hedge.tail() || hedge.head() != hedgeOpp.tail()) {
-        throw new RuntimeException(
-            "face " + getVertexString() + ": " + "half edge " + hedge.getVertexString() + " reflected by " + hedgeOpp.getVertexString());
+        throw new RuntimeException("face " + getVertexString() + ": " + "half edge " + hedge.getVertexString() + " reflected by " + hedgeOpp.getVertexString());
       }
       Face oppFace = hedgeOpp.face;
       if (oppFace == null) {
