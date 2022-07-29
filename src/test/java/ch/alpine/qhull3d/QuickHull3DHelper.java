@@ -27,7 +27,7 @@ import java.util.Random;
  * will cause timing information to be produced instead.
  *
  * @author John E. Lloyd, Fall 2004 */
-public class QuickHull3DTest {
+public class QuickHull3DHelper {
   static private final double DOUBLE_PREC = 2.2204460492503131e-16;
   static final boolean triangulate = false;
   static boolean doTesting = true;
@@ -42,7 +42,7 @@ public class QuickHull3DTest {
   static final double epsScale = 2.0;
 
   /** Creates a testing object. */
-  public QuickHull3DTest() {
+  public QuickHull3DHelper() {
     rand = new Random();
     rand.setSeed(0x1234);
   }

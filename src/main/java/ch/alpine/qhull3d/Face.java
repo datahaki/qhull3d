@@ -23,6 +23,53 @@ class Face {
   static final int VISIBLE = 1;
   static final int NON_CONVEX = 2;
   static final int DELETED = 3;
+
+  /** Constructs a triangule Face from vertices v0, v1, and v2.
+   *
+   * @param v0 first vertex
+   * @param v1 second vertex
+   * @param v2 third vertex */
+  public static Face createTriangle(Vertex v0, Vertex v1, Vertex v2, double minArea) {
+    Face face = new Face();
+    HalfEdge he0 = new HalfEdge(v0, face);
+    HalfEdge he1 = new HalfEdge(v1, face);
+    HalfEdge he2 = new HalfEdge(v2, face);
+    he0.prev = he2;
+    he0.next = he1;
+    he1.prev = he0;
+    he1.next = he2;
+    he2.prev = he1;
+    he2.next = he0;
+    face.he0 = he0;
+    // compute the normal and offset
+    face.computeNormalAndCentroid(minArea);
+    return face;
+  }
+
+  public static Face createTriangle(Vertex v0, Vertex v1, Vertex v2) {
+    return createTriangle(v0, v1, v2, 0);
+  }
+
+  public static Face create(Vertex[] vtxArray, int[] indices) {
+    Face face = new Face();
+    HalfEdge hePrev = null;
+    for (int j : indices) {
+      HalfEdge he = new HalfEdge(vtxArray[j], face);
+      if (hePrev != null) {
+        he.setPrev(hePrev);
+        hePrev.setNext(he);
+      } else {
+        face.he0 = he;
+      }
+      hePrev = he;
+    }
+    face.he0.setPrev(hePrev);
+    hePrev.setNext(face.he0);
+    // compute the normal and offset
+    face.computeNormalAndCentroid();
+    return face;
+  }
+
   // ---
   HalfEdge he0;
   private final Vector3d normal;
@@ -34,6 +81,12 @@ class Face {
   Face next;
   int mark;
   Vertex outside;
+
+  public Face() {
+    normal = new Vector3d();
+    centroid = new Point3d();
+    mark = VISIBLE;
+  }
 
   public void computeCentroid(Point3d centroid) {
     centroid.setZero();
@@ -114,7 +167,7 @@ class Face {
       he = he.next;
     } while (he != he0);
     if (numv != numVerts) {
-      throw new InternalErrorException("face " + getVertexString() + " numVerts=" + numVerts + " should be " + numv);
+      throw new RuntimeException("face " + getVertexString() + " numVerts=" + numVerts + " should be " + numv);
     }
   }
 
@@ -122,58 +175,6 @@ class Face {
     computeNormal(normal, minArea);
     computeCentroid(centroid);
     planeOffset = normal.dot(centroid);
-  }
-
-  public static Face createTriangle(Vertex v0, Vertex v1, Vertex v2) {
-    return createTriangle(v0, v1, v2, 0);
-  }
-
-  /** Constructs a triangule Face from vertices v0, v1, and v2.
-   *
-   * @param v0 first vertex
-   * @param v1 second vertex
-   * @param v2 third vertex */
-  public static Face createTriangle(Vertex v0, Vertex v1, Vertex v2, double minArea) {
-    Face face = new Face();
-    HalfEdge he0 = new HalfEdge(v0, face);
-    HalfEdge he1 = new HalfEdge(v1, face);
-    HalfEdge he2 = new HalfEdge(v2, face);
-    he0.prev = he2;
-    he0.next = he1;
-    he1.prev = he0;
-    he1.next = he2;
-    he2.prev = he1;
-    he2.next = he0;
-    face.he0 = he0;
-    // compute the normal and offset
-    face.computeNormalAndCentroid(minArea);
-    return face;
-  }
-
-  public static Face create(Vertex[] vtxArray, int[] indices) {
-    Face face = new Face();
-    HalfEdge hePrev = null;
-    for (int j : indices) {
-      HalfEdge he = new HalfEdge(vtxArray[j], face);
-      if (hePrev != null) {
-        he.setPrev(hePrev);
-        hePrev.setNext(he);
-      } else {
-        face.he0 = he;
-      }
-      hePrev = he;
-    }
-    face.he0.setPrev(hePrev);
-    hePrev.setNext(face.he0);
-    // compute the normal and offset
-    face.computeNormalAndCentroid();
-    return face;
-  }
-
-  public Face() {
-    normal = new Vector3d();
-    centroid = new Point3d();
-    mark = VISIBLE;
   }
 
   /** Gets the i-th half-edge associated with the face.
@@ -300,25 +301,25 @@ class Face {
     double maxd = 0;
     int numv = 0;
     if (numVerts < 3) {
-      throw new InternalErrorException("degenerate face: " + getVertexString());
+      throw new RuntimeException("degenerate face: " + getVertexString());
     }
     do {
       HalfEdge hedgeOpp = hedge.getOpposite();
       if (hedgeOpp == null) {
-        throw new InternalErrorException("face " + getVertexString() + ": " + "unreflected half edge " + hedge.getVertexString());
+        throw new RuntimeException("face " + getVertexString() + ": " + "unreflected half edge " + hedge.getVertexString());
       } else if (hedgeOpp.getOpposite() != hedge) {
-        throw new InternalErrorException("face " + getVertexString() + ": " + "opposite half edge " + hedgeOpp.getVertexString() + " has opposite "
+        throw new RuntimeException("face " + getVertexString() + ": " + "opposite half edge " + hedgeOpp.getVertexString() + " has opposite "
             + hedgeOpp.getOpposite().getVertexString());
       }
       if (hedgeOpp.head() != hedge.tail() || hedge.head() != hedgeOpp.tail()) {
-        throw new InternalErrorException(
+        throw new RuntimeException(
             "face " + getVertexString() + ": " + "half edge " + hedge.getVertexString() + " reflected by " + hedgeOpp.getVertexString());
       }
       Face oppFace = hedgeOpp.face;
       if (oppFace == null) {
-        throw new InternalErrorException("face " + getVertexString() + ": " + "no face on half edge " + hedgeOpp.getVertexString());
+        throw new RuntimeException("face " + getVertexString() + ": " + "no face on half edge " + hedgeOpp.getVertexString());
       } else if (oppFace.mark == DELETED) {
-        throw new InternalErrorException("face " + getVertexString() + ": " + "opposite face " + oppFace.getVertexString() + " not on hull");
+        throw new RuntimeException("face " + getVertexString() + ": " + "opposite face " + oppFace.getVertexString() + " not on hull");
       }
       double d = Math.abs(distanceToPlane(hedge.head().pnt));
       if (d > maxd) {
@@ -328,7 +329,7 @@ class Face {
       hedge = hedge.next;
     } while (hedge != he0);
     if (numv != numVerts) {
-      throw new InternalErrorException("face " + getVertexString() + " numVerts=" + numVerts + " should be " + numv);
+      throw new RuntimeException("face " + getVertexString() + " numVerts=" + numVerts + " should be " + numv);
     }
   }
 

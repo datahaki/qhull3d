@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 class MainTest {
   @Test
   void test() {
-    QuickHull3DTest tester = new QuickHull3DTest();
+    QuickHull3DHelper tester = new QuickHull3DHelper();
     // for (int i = 0; i < args.length; i++) {
     // if (args[i].equals("-timing")) {
     // doTiming = true;
