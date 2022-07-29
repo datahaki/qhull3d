@@ -7,3 +7,4 @@ The modifications include
 * suggestions by IntelliJ IDE
 * suggestions by Eclipse IDE
 * reordering of functions inside classes
+* strict separation of main and test scope

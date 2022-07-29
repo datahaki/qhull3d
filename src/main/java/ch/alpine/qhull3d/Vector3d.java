@@ -16,7 +16,7 @@ package ch.alpine.qhull3d;
  * which are relevant to convex hull generation are supplied here.
  *
  * @author John E. Lloyd, Fall 2004 */
-public class Vector3d {
+class Vector3d {
   /** Precision of a double. */
   private static final double DOUBLE_PREC = 2.2204460492503131e-16;
   /** First element */

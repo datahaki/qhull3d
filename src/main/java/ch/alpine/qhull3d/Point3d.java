@@ -19,7 +19,7 @@ package ch.alpine.qhull3d;
  * purely academic.
  *
  * @author John E. Lloyd, Fall 2004 */
-public class Point3d extends Vector3d {
+class Point3d extends Vector3d {
   /** Creates a Point3d and initializes it to zero. */
   public Point3d() {
   }
