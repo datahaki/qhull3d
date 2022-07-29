@@ -27,7 +27,7 @@ class SimpleTest {
       System.out.println(pnt.x + " " + pnt.y + " " + pnt.z);
     }
     System.out.println("Faces:");
-    int[][] faceIndices = hull.getFaces();
+    int[][] faceIndices = hull.getFaces(0);
     for (int i = 0; i < vertices.length; i++) {
       for (int k = 0; k < faceIndices[i].length; k++) {
         System.out.print(faceIndices[i][k] + " ");

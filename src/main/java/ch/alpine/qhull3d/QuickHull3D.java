@@ -66,7 +66,7 @@ import java.util.List;
  * }
  * </pre>
  * As a convenience, there are also {@link #build(double[]) build}
- * and {@link #getVertices(double[]) getVertex} methods which
+ * and getVertex methods which
  * pass point information using an array of doubles.
  *
  * <h3><a name=distTol>Robustness</h3> Because this algorithm uses floating
@@ -197,21 +197,19 @@ public class QuickHull3D {
 
   private void addPointToFace(Vertex vtx, Face face) {
     vtx.face = face;
-    if (face.outside == null) {
+    if (face.outside == null)
       claimed.add(vtx);
-    } else {
+    else
       claimed.insertBefore(vtx, face.outside);
-    }
     face.outside = vtx;
   }
 
   private void removePointFromFace(Vertex vtx, Face face) {
     if (vtx == face.outside) {
-      if (vtx.next != null && vtx.next.face == face) {
+      if (vtx.next != null && vtx.next.face == face)
         face.outside = vtx.next;
-      } else {
+      else
         face.outside = null;
-      }
     }
     claimed.delete(vtx);
   }
@@ -227,35 +225,6 @@ public class QuickHull3D {
       return face.outside;
     }
     return null;
-  }
-
-  private HalfEdge findHalfEdge(Vertex tail, Vertex head) {
-    // brute force ... OK, since setHull is not used much
-    for (Face face : faces) {
-      HalfEdge he = face.findEdge(tail, head);
-      if (he != null) {
-        return he;
-      }
-    }
-    return null;
-  }
-
-  protected void setHull(double[] coords, int nump, int[][] faceIndices, int numf) {
-    initBuffers(nump);
-    setPoints(coords, nump);
-    computeMaxAndMin();
-    for (int i = 0; i < numf; i++) {
-      Face face = Face.create(pointBuffer, faceIndices[i]);
-      HalfEdge he = face.he0;
-      do {
-        HalfEdge heOpp = findHalfEdge(he.head(), he.tail());
-        if (heOpp != null) {
-          he.setOpposite(heOpp);
-        }
-        he = he.next;
-      } while (he != face.he0);
-      faces.add(face);
-    }
   }
 
   /** Constructs the convex hull of a set of points whose
@@ -309,7 +278,7 @@ public class QuickHull3D {
     }
   }
 
-  protected void initBuffers(int nump) {
+  private void initBuffers(int nump) {
     if (pointBuffer.length < nump) {
       Vertex[] newBuffer = new Vertex[nump];
       vertexPointIndices = new int[nump];
@@ -325,7 +294,7 @@ public class QuickHull3D {
     numPoints = nump;
   }
 
-  protected void setPoints(double[] coords, int nump) {
+  private void setPoints(double[] coords, int nump) {
     for (int i = 0; i < nump; i++) {
       Vertex vtx = pointBuffer[i];
       vtx.pnt.set(coords[i * 3 + 0], coords[i * 3 + 1], coords[i * 3 + 2]);
@@ -333,15 +302,7 @@ public class QuickHull3D {
     }
   }
 
-  protected void setPoints(Point3d[] pnts, int nump) {
-    for (int i = 0; i < nump; i++) {
-      Vertex vtx = pointBuffer[i];
-      vtx.pnt.set(pnts[i]);
-      vtx.index = i;
-    }
-  }
-
-  protected void computeMaxAndMin() {
+  private void computeMaxAndMin() {
     Vector3d max = new Vector3d();
     Vector3d min = new Vector3d();
     for (int i = 0; i < 3; i++) {
@@ -388,7 +349,7 @@ public class QuickHull3D {
   }
 
   /** Creates the initial simplex from which the hull will be built. */
-  protected void createInitialSimplex() throws IllegalArgumentException {
+  private void createInitialSimplex() throws IllegalArgumentException {
     double max = 0;
     int imax = 0;
     for (int i = 0; i < 3; i++) {
@@ -508,32 +469,12 @@ public class QuickHull3D {
 
   /** Returns the vertex points in this hull.
    *
-   * @return array of vertex points
-   * @see QuickHull3D#getVertices(double[])
-   * @see QuickHull3D#getFaces() */
+   * @return array of vertex points */
   public Point3d[] getVertices() {
     Point3d[] vtxs = new Point3d[numVertices];
     for (int i = 0; i < numVertices; i++)
       vtxs[i] = pointBuffer[vertexPointIndices[i]].pnt;
     return vtxs;
-  }
-
-  /** Returns the coordinates of the vertex points of this hull.
-   *
-   * @param coords returns the x, y, z coordinates of each vertex.
-   * This length of this array must be at least three times
-   * the number of vertices.
-   * @return the number of vertices
-   * @see QuickHull3D#getVertices()
-   * @see QuickHull3D#getFaces() */
-  public int getVertices(double[] coords) {
-    for (int i = 0; i < numVertices; i++) {
-      Point3d pnt = pointBuffer[vertexPointIndices[i]].pnt;
-      coords[i * 3 + 0] = pnt.x;
-      coords[i * 3 + 1] = pnt.y;
-      coords[i * 3 + 2] = pnt.z;
-    }
-    return numVertices;
   }
 
   /** Returns an array specifing the index of each hull vertex
@@ -551,24 +492,6 @@ public class QuickHull3D {
    * @return number of faces */
   public int getNumFaces() {
     return faces.size();
-  }
-
-  /** Returns the faces associated with this hull.
-   *
-   * <p>Each face is represented by an integer array which gives the
-   * indices of the vertices. These indices are numbered
-   * relative to the
-   * hull vertices, are zero-based,
-   * and are arranged counter-clockwise. More control
-   * over the index format can be obtained using
-   * {@link #getFaces(int) getFaces(indexFlags)}.
-   *
-   * @return array of integer arrays, giving the vertex
-   * indices for each face.
-   * @see QuickHull3D#getVertices()
-   * @see QuickHull3D#getFaces(int) */
-  public int[][] getFaces() {
-    return getFaces(0);
   }
 
   /** Returns the faces associated with this hull.
@@ -614,8 +537,7 @@ public class QuickHull3D {
    *
    * @param ps stream used for printing
    * @see QuickHull3D#print(PrintStream,int)
-   * @see QuickHull3D#getVertices()
-   * @see QuickHull3D#getFaces() */
+   * @see QuickHull3D#getVertices() */
   public void print(PrintStream ps) {
     print(ps, 0);
   }
@@ -637,8 +559,7 @@ public class QuickHull3D {
    * @param ps stream used for printing
    * @param indexFlags specifies index characteristics
    * (0 results in the default).
-   * @see QuickHull3D#getVertices()
-   * @see QuickHull3D#getFaces() */
+   * @see QuickHull3D#getVertices() */
   public void print(PrintStream ps, int indexFlags) {
     if ((indexFlags & INDEXED_FROM_ZERO) == 0) {
       indexFlags |= INDEXED_FROM_ONE;
