@@ -112,8 +112,6 @@ import java.util.List;
  *
  * @author John E. Lloyd, Fall 2004 */
 public class QuickHull3D {
-  /** Precision of a double. */
-  private static final double DOUBLE_PREC = 2.2204460492503131e-16;
   /** Specifies that (on output) vertex indices for a face should be
    * listed in clockwise order. */
   public static final int CLOCKWISE = 0x1;
@@ -301,12 +299,12 @@ public class QuickHull3D {
    * and hence appear to be non-convex (this same limitation is present
    * in <a href=http://www.qhull.org>qhull</a>). */
   public void triangulate() {
-    double minArea = 1000 * charLength * DOUBLE_PREC;
+    double minArea = 1000 * charLength * StaticHelper.DOUBLE_PREC;
     newFaces.clear();
     for (Face face : faces)
       if (face.mark == Face.VISIBLE)
         face.triangulate(newFaces, minArea); // splitFace (face);
-    for (Face face = newFaces.first(); face != null; face = face.next) {
+    for (Face face = newFaces.head(); face != null; face = face.next) {
       faces.add(face);
     }
   }
@@ -380,7 +378,7 @@ public class QuickHull3D {
     charLength = Math.max(max.x - min.x, max.y - min.y);
     charLength = Math.max(max.z - min.z, charLength);
     if (explicitTolerance == AUTOMATIC_TOLERANCE) {
-      tolerance = 3 * DOUBLE_PREC * //
+      tolerance = 3 * StaticHelper.DOUBLE_PREC * //
           (Math.max(Math.abs(max.x), Math.abs(min.x)) //
               + Math.max(Math.abs(max.y), Math.abs(min.y)) //
               + Math.max(Math.abs(max.z), Math.abs(min.z)));
@@ -686,7 +684,7 @@ public class QuickHull3D {
       vtxNext = vtx.next;
       double maxDist = tolerance;
       Face maxFace = null;
-      for (Face newFace = newFaces.first(); newFace != null; newFace = newFace.next) {
+      for (Face newFace = newFaces.head(); newFace != null; newFace = newFace.next) {
         if (newFace.mark == Face.VISIBLE) {
           double dist = newFace.distanceToPlane(vtx.pnt);
           if (dist > maxDist) {
@@ -875,7 +873,7 @@ public class QuickHull3D {
     addNewFaces(newFaces, eyeVtx, horizon);
     // first merge pass ... merge faces which are non-convex
     // as determined by the larger face
-    for (Face face = newFaces.first(); face != null; face = face.next) {
+    for (Face face = newFaces.head(); face != null; face = face.next) {
       if (face.mark == Face.VISIBLE) {
         while (doAdjacentMerge(face, NONCONVEX_WRT_LARGER_FACE)) {
           // ---
@@ -884,7 +882,7 @@ public class QuickHull3D {
     }
     // second merge pass ... merge faces which are non-convex
     // wrt either face
-    for (Face face = newFaces.first(); face != null; face = face.next) {
+    for (Face face = newFaces.head(); face != null; face = face.next) {
       if (face.mark == Face.NON_CONVEX) {
         face.mark = Face.VISIBLE;
         while (doAdjacentMerge(face, NONCONVEX)) {

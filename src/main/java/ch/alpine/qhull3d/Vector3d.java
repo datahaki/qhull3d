@@ -17,8 +17,6 @@ package ch.alpine.qhull3d;
  *
  * @author John E. Lloyd, Fall 2004 */
 class Vector3d {
-  /** Precision of a double. */
-  private static final double DOUBLE_PREC = 2.2204460492503131e-16;
   /** First element */
   public double x;
   /** Second element */
@@ -191,7 +189,7 @@ class Vector3d {
   public void normalize() {
     double lenSqr = x * x + y * y + z * z;
     double err = lenSqr - 1;
-    if (err > (2 * DOUBLE_PREC) || err < -(2 * DOUBLE_PREC)) {
+    if (err > (2 * StaticHelper.DOUBLE_PREC) || err < -(2 * StaticHelper.DOUBLE_PREC)) {
       double len = Math.sqrt(lenSqr);
       x /= len;
       y /= len;

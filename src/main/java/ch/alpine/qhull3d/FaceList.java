@@ -12,16 +12,15 @@ class FaceList {
 
   /** Adds a vertex to the end of this list. */
   public void add(Face vtx) {
-    if (head == null) {
+    if (head == null)
       head = vtx;
-    } else {
+    else
       tail.next = vtx;
-    }
     vtx.next = null;
     tail = vtx;
   }
 
-  public Face first() {
+  public Face head() {
     return head;
   }
 

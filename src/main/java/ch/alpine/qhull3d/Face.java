@@ -29,7 +29,11 @@ class Face {
    * @param v0 first vertex
    * @param v1 second vertex
    * @param v2 third vertex */
-  public static Face createTriangle(Vertex v0, Vertex v1, Vertex v2, double minArea) {
+  public static Face createTriangle(Vertex v0, Vertex v1, Vertex v2) {
+    return createTriangle(v0, v1, v2, 0);
+  }
+
+  private static Face createTriangle(Vertex v0, Vertex v1, Vertex v2, double minArea) {
     Face face = new Face();
     HalfEdge he0 = new HalfEdge(v0, face);
     HalfEdge he1 = new HalfEdge(v1, face);
@@ -44,10 +48,6 @@ class Face {
     // compute the normal and offset
     face.computeNormalAndCentroid(minArea);
     return face;
-  }
-
-  public static Face createTriangle(Vertex v0, Vertex v1, Vertex v2) {
-    return createTriangle(v0, v1, v2, 0);
   }
 
   public static Face create(Vertex[] vtxArray, int[] indices) {
