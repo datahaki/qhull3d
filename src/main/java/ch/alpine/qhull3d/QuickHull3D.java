@@ -13,9 +13,10 @@ package ch.alpine.qhull3d;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 /** Computes the convex hull of a set of three dimensional points.
  *
@@ -137,8 +138,8 @@ public class QuickHull3D {
   private final Face[] discardedFaces = new Face[3];
   private final Vertex[] maxVtxs = new Vertex[3];
   private final Vertex[] minVtxs = new Vertex[3];
-  protected final Vector faces = new Vector(16);
-  protected final Vector horizon = new Vector(16);
+  protected final List<Face> faces = new ArrayList<>(16);
+  protected final List<HalfEdge> horizon = new ArrayList<>(16);
   private final FaceList newFaces = new FaceList();
   private final VertexList unclaimed = new VertexList();
   private final VertexList claimed = new VertexList();
@@ -872,7 +873,7 @@ public class QuickHull3D {
     return false;
   }
 
-  protected void calculateHorizon(Point3d eyePnt, HalfEdge edge0, Face face, Vector horizon) {
+  protected void calculateHorizon(Point3d eyePnt, HalfEdge edge0, Face face, List<HalfEdge> horizon) {
     // oldFaces.add (face);
     deleteFacePoints(face, null);
     face.mark = Face.DELETED;
@@ -909,7 +910,7 @@ public class QuickHull3D {
     return face.getEdge(0);
   }
 
-  protected void addNewFaces(FaceList newFaces, Vertex eyeVtx, Vector horizon) {
+  protected void addNewFaces(FaceList newFaces, Vertex eyeVtx, List<HalfEdge> horizon) {
     newFaces.clear();
     HalfEdge hedgeSidePrev = null;
     HalfEdge hedgeSideBegin = null;

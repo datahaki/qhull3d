@@ -497,5 +497,4 @@ public class QuickHull3DTest {
       System.out.println(n + " points: " + (t1 - t0) / (double) cnt + " msec");
     }
   }
-
 }
