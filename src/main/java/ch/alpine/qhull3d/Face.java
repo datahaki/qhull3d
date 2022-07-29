@@ -32,7 +32,7 @@ class Face {
   int index;
   int numVerts;
   Face next;
-  int mark = VISIBLE;
+  int mark;
   Vertex outside;
 
   public void computeCentroid(Point3d centroid) {
@@ -96,7 +96,6 @@ class Face {
       normal.x += d1y * d2z - d1z * d2y;
       normal.y += d1z * d2x - d1x * d2z;
       normal.z += d1x * d2y - d1y * d2x;
-      he1 = he2;
       he2 = he2.next;
       numVerts++;
     }

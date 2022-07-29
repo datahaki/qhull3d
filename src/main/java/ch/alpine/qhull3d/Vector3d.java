@@ -56,16 +56,16 @@ public class Vector3d {
    * if i is not in the range 0 to 2. */
   public double get(int i) {
     switch (i) {
-    case 0: {
+    case 0 -> {
       return x;
     }
-    case 1: {
+    case 1 -> {
       return y;
     }
-    case 2: {
+    case 2 -> {
       return z;
     }
-    default: {
+    default -> {
       throw new ArrayIndexOutOfBoundsException(i);
     }
     }
@@ -78,19 +78,19 @@ public class Vector3d {
    * @param value element value */
   public void set(int i, double value) {
     switch (i) {
-    case 0: {
+    case 0 -> {
       x = value;
       break;
     }
-    case 1: {
+    case 1 -> {
       y = value;
       break;
     }
-    case 2: {
+    case 2 -> {
       z = value;
       break;
     }
-    default: {
+    default -> {
       throw new ArrayIndexOutOfBoundsException(i);
     }
     }

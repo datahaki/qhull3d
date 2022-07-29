@@ -263,8 +263,8 @@ public class QuickHull3D {
 
   private HalfEdge findHalfEdge(Vertex tail, Vertex head) {
     // brute force ... OK, since setHull is not used much
-    for (Object face : faces) {
-      HalfEdge he = ((Face) face).findEdge(tail, head);
+    for (Face face : faces) {
+      HalfEdge he = face.findEdge(tail, head);
       if (he != null) {
         return he;
       }
@@ -362,8 +362,8 @@ public class QuickHull3D {
   public void triangulate() {
     double minArea = 1000 * charLength * DOUBLE_PREC;
     newFaces.clear();
-    for (Object o : faces) {
-      Face face = (Face) o;
+    for (Face o : faces) {
+      Face face = o;
       if (face.mark == Face.VISIBLE) {
         face.triangulate(newFaces, minArea);
         // splitFace (face);
@@ -653,8 +653,8 @@ public class QuickHull3D {
   public int[][] getFaces(int indexFlags) {
     int[][] allFaces = new int[faces.size()][];
     int k = 0;
-    for (Object o : faces) {
-      Face face = (Face) o;
+    for (Face o : faces) {
+      Face face = o;
       allFaces[k] = new int[face.numVertices()];
       getFaceIndices(allFaces[k], face, indexFlags);
       k++;
@@ -712,8 +712,8 @@ public class QuickHull3D {
       Point3d pnt = pointBuffer[vertexPointIndices[i]].pnt;
       ps.println("v " + pnt.x + " " + pnt.y + " " + pnt.z);
     }
-    for (Object o : faces) {
-      Face face = (Face) o;
+    for (Face o : faces) {
+      Face face = o;
       int[] indices = new int[face.numVertices()];
       getFaceIndices(indices, face, indexFlags);
       ps.print("f");
@@ -891,8 +891,8 @@ public class QuickHull3D {
     newFaces.clear();
     HalfEdge hedgeSidePrev = null;
     HalfEdge hedgeSideBegin = null;
-    for (Object o : horizon) {
-      HalfEdge horizonHe = (HalfEdge) o;
+    for (HalfEdge o : horizon) {
+      HalfEdge horizonHe = o;
       HalfEdge hedgeSide = addAdjoiningFace(eyeVtx, horizonHe);
       if (debug) {
         System.out.println("new face: " + hedgeSide.face.getVertexString());
@@ -1045,8 +1045,8 @@ public class QuickHull3D {
   protected boolean checkFaces(double tol, PrintStream ps) {
     // check edge convexity
     boolean convex = true;
-    for (Object o : faces) {
-      Face face = (Face) o;
+    for (Face o : faces) {
+      Face face = o;
       if (face.mark == Face.VISIBLE) {
         if (!checkFaceConvexity(face, tol, ps)) {
           convex = false;
@@ -1099,8 +1099,8 @@ public class QuickHull3D {
     // check point inclusion
     for (int i = 0; i < numPoints; i++) {
       Point3d pnt = pointBuffer[i].pnt;
-      for (Object o : faces) {
-        Face face = (Face) o;
+      for (Face o : faces) {
+        Face face = o;
         if (face.mark == Face.VISIBLE) {
           dist = face.distanceToPlane(pnt);
           if (dist > pointTol) {

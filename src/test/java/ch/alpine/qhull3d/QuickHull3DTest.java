@@ -202,7 +202,7 @@ public class QuickHull3DTest {
     return coords;
   }
 
-  private double[] shuffleCoords(double[] coords) {
+  private void shuffleCoords(double[] coords) {
     int num = coords.length / 3;
     for (int i = 0; i < num; i++) {
       int i1 = rand.nextInt(num);
@@ -213,7 +213,6 @@ public class QuickHull3DTest {
         coords[i2 * 3 + k] = tmp;
       }
     }
-    return coords;
   }
 
   /** Returns randomly shuffled coordinates for points on a
