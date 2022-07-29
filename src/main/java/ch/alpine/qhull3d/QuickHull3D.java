@@ -112,6 +112,8 @@ import java.util.List;
  *
  * @author John E. Lloyd, Fall 2004 */
 public class QuickHull3D {
+  /** Precision of a double. */
+  private static final double DOUBLE_PREC = 2.2204460492503131e-16;
   /** Specifies that (on output) vertex indices for a face should be
    * listed in clockwise order. */
   public static final int CLOCKWISE = 0x1;
@@ -161,9 +163,6 @@ public class QuickHull3D {
   public void setDebug(boolean enable) {
     debug = enable;
   }
-
-  /** Precision of a double. */
-  static private final double DOUBLE_PREC = 2.2204460492503131e-16;
 
   /** Returns the distance tolerance that was used for the most recently
    * computed hull. The distance tolerance is used to determine when
@@ -304,13 +303,9 @@ public class QuickHull3D {
   public void triangulate() {
     double minArea = 1000 * charLength * DOUBLE_PREC;
     newFaces.clear();
-    for (Face o : faces) {
-      Face face = o;
-      if (face.mark == Face.VISIBLE) {
-        face.triangulate(newFaces, minArea);
-        // splitFace (face);
-      }
-    }
+    for (Face face : faces)
+      if (face.mark == Face.VISIBLE)
+        face.triangulate(newFaces, minArea); // splitFace (face);
     for (Face face = newFaces.first(); face != null; face = face.next) {
       faces.add(face);
     }
@@ -385,8 +380,10 @@ public class QuickHull3D {
     charLength = Math.max(max.x - min.x, max.y - min.y);
     charLength = Math.max(max.z - min.z, charLength);
     if (explicitTolerance == AUTOMATIC_TOLERANCE) {
-      tolerance = 3 * DOUBLE_PREC
-          * (Math.max(Math.abs(max.x), Math.abs(min.x)) + Math.max(Math.abs(max.y), Math.abs(min.y)) + Math.max(Math.abs(max.z), Math.abs(min.z)));
+      tolerance = 3 * DOUBLE_PREC * //
+          (Math.max(Math.abs(max.x), Math.abs(min.x)) //
+              + Math.max(Math.abs(max.y), Math.abs(min.y)) //
+              + Math.max(Math.abs(max.z), Math.abs(min.z)));
     } else {
       tolerance = explicitTolerance;
     }
@@ -518,9 +515,8 @@ public class QuickHull3D {
    * @see QuickHull3D#getFaces() */
   public Point3d[] getVertices() {
     Point3d[] vtxs = new Point3d[numVertices];
-    for (int i = 0; i < numVertices; i++) {
+    for (int i = 0; i < numVertices; i++)
       vtxs[i] = pointBuffer[vertexPointIndices[i]].pnt;
-    }
     return vtxs;
   }
 
@@ -595,8 +591,7 @@ public class QuickHull3D {
   public int[][] getFaces(int indexFlags) {
     int[][] allFaces = new int[faces.size()][];
     int k = 0;
-    for (Face o : faces) {
-      Face face = o;
+    for (Face face : faces) {
       allFaces[k] = new int[face.numVertices()];
       getFaceIndices(allFaces[k], face, indexFlags);
       k++;
@@ -984,18 +979,17 @@ public class QuickHull3D {
     return true;
   }
 
+  /** check edge convexity
+   * 
+   * @param tol
+   * @param ps
+   * @return */
   protected boolean checkFaces(double tol, PrintStream ps) {
-    // check edge convexity
-    boolean convex = true;
-    for (Face o : faces) {
-      Face face = o;
-      if (face.mark == Face.VISIBLE) {
-        if (!checkFaceConvexity(face, tol, ps)) {
-          convex = false;
-        }
-      }
-    }
-    return convex;
+    for (Face face : faces)
+      if (face.mark == Face.VISIBLE)
+        if (!checkFaceConvexity(face, tol, ps))
+          return false;
+    return true;
   }
 
   /** Checks the correctness of the hull using the distance tolerance
@@ -1041,18 +1035,15 @@ public class QuickHull3D {
     // check point inclusion
     for (int i = 0; i < numPoints; i++) {
       Point3d pnt = pointBuffer[i].pnt;
-      for (Face o : faces) {
-        Face face = o;
+      for (Face face : faces)
         if (face.mark == Face.VISIBLE) {
           dist = face.distanceToPlane(pnt);
           if (dist > pointTol) {
-            if (ps != null) {
+            if (ps != null)
               ps.println("Point " + i + " " + dist + " above face " + face.getVertexString());
-            }
             return false;
           }
         }
-      }
     }
     return true;
   }
