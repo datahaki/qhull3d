@@ -205,21 +205,19 @@ public class QuickHull3D {
   }
 
   private void removePointFromFace(Vertex vtx, Face face) {
-    if (vtx == face.outside) {
+    if (vtx == face.outside)
       if (vtx.next != null && vtx.next.face == face)
         face.outside = vtx.next;
       else
         face.outside = null;
-    }
     claimed.delete(vtx);
   }
 
   private Vertex removeAllPointsFromFace(Face face) {
     if (face.outside != null) {
       Vertex end = face.outside;
-      while (end.next != null && end.next.face == face) {
+      while (end.next != null && end.next.face == face)
         end = end.next;
-      }
       claimed.delete(face.outside, end);
       end.next = null;
       return face.outside;
@@ -252,12 +250,10 @@ public class QuickHull3D {
    * or the points appear to be coincident, colinear, or
    * coplanar. */
   private void build(double[] coords, int nump) throws IllegalArgumentException {
-    if (nump < 4) {
+    if (nump < 4)
       throw new IllegalArgumentException("Less than four input points specified");
-    }
-    if (coords.length / 3 < nump) {
+    if (coords.length / 3 < nump)
       throw new IllegalArgumentException("Coordinate array too small for specified number of points");
-    }
     initBuffers(nump);
     setPoints(coords, nump);
     buildHull();
@@ -305,9 +301,8 @@ public class QuickHull3D {
   private void computeMaxAndMin() {
     Vector3d max = new Vector3d();
     Vector3d min = new Vector3d();
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++)
       maxVtxs[i] = minVtxs[i] = pointBuffer[0];
-    }
     max.set(pointBuffer[0].pnt);
     min.set(pointBuffer[0].pnt);
     for (int i = 1; i < numPoints; i++) {
@@ -407,9 +402,8 @@ public class QuickHull3D {
         vtx[3] = pointBuffer[i];
       }
     }
-    if (Math.abs(maxDist) <= 100 * tolerance) {
+    if (Math.abs(maxDist) <= 100 * tolerance)
       throw new IllegalArgumentException("Input points appear to be coplanar");
-    }
     if (debug) {
       System.out.println("initial vertices:");
       System.out.println(vtx[0].index + ": " + vtx[0].pnt);
@@ -520,66 +514,6 @@ public class QuickHull3D {
     return allFaces;
   }
 
-  /** Prints the vertices and faces of this hull to the stream ps.
-   *
-   * <p>
-   * This is done using the Alias Wavefront .obj file
-   * format, with the vertices printed first (each preceding by
-   * the letter <code>v</code>), followed by the vertex indices
-   * for each face (each
-   * preceded by the letter <code>f</code>).
-   *
-   * <p>The face indices are numbered with respect to the hull vertices
-   * (as opposed to the input points), with a lowest index of 1, and are
-   * arranged counter-clockwise. More control over the index format can
-   * be obtained using
-   * {@link #print(PrintStream,int) print(ps,indexFlags)}.
-   *
-   * @param ps stream used for printing
-   * @see QuickHull3D#print(PrintStream,int)
-   * @see QuickHull3D#getVertices() */
-  public void print(PrintStream ps) {
-    print(ps, 0);
-  }
-
-  /** Prints the vertices and faces of this hull to the stream ps.
-   *
-   * <p> This is done using the Alias Wavefront .obj file format, with
-   * the vertices printed first (each preceding by the letter
-   * <code>v</code>), followed by the vertex indices for each face (each
-   * preceded by the letter <code>f</code>).
-   *
-   * <p>By default, the face indices are numbered with respect to the
-   * hull vertices (as opposed to the input points), with a lowest index
-   * of 1, and are arranged counter-clockwise. However, this
-   * can be changed by setting {@link #POINT_RELATIVE POINT_RELATIVE},
-   * {@link #INDEXED_FROM_ONE INDEXED_FROM_ZERO}, or {@link #CLOCKWISE
-   * CLOCKWISE} in the indexFlags parameter.
-   *
-   * @param ps stream used for printing
-   * @param indexFlags specifies index characteristics
-   * (0 results in the default).
-   * @see QuickHull3D#getVertices() */
-  public void print(PrintStream ps, int indexFlags) {
-    if ((indexFlags & INDEXED_FROM_ZERO) == 0) {
-      indexFlags |= INDEXED_FROM_ONE;
-    }
-    for (int i = 0; i < numVertices; i++) {
-      Point3d pnt = pointBuffer[vertexPointIndices[i]].pnt;
-      ps.println("v " + pnt.x + " " + pnt.y + " " + pnt.z);
-    }
-    for (Face o : faces) {
-      Face face = o;
-      int[] indices = new int[face.numVertices()];
-      getFaceIndices(indices, face, indexFlags);
-      ps.print("f");
-      for (int index : indices) {
-        ps.print(" " + index);
-      }
-      ps.println();
-    }
-  }
-
   private void getFaceIndices(int[] indices, Face face, int flags) {
     boolean ccw = ((flags & CLOCKWISE) == 0);
     boolean indexedFromOne = ((flags & INDEXED_FROM_ONE) != 0);
@@ -599,7 +533,7 @@ public class QuickHull3D {
     } while (hedge != face.he0);
   }
 
-  protected void resolveUnclaimedPoints(FaceList newFaces) {
+  private void resolveUnclaimedPoints(FaceList newFaces) {
     Vertex vtxNext = unclaimed.first();
     for (Vertex vtx = vtxNext; vtx != null; vtx = vtxNext) {
       vtxNext = vtx.next;
@@ -630,7 +564,7 @@ public class QuickHull3D {
     }
   }
 
-  protected void deleteFacePoints(Face face, Face absorbingFace) {
+  private void deleteFacePoints(Face face, Face absorbingFace) {
     Vertex faceVtxs = removeAllPointsFromFace(face);
     if (faceVtxs != null) {
       if (absorbingFace == null) {
@@ -653,7 +587,7 @@ public class QuickHull3D {
   private static final int NONCONVEX_WRT_LARGER_FACE = 1;
   private static final int NONCONVEX = 2;
 
-  protected double oppFaceDistance(HalfEdge he) {
+  private static double oppFaceDistance(HalfEdge he) {
     return he.face.distanceToPlane(he.opposite.face.getCentroid());
   }
 
@@ -706,7 +640,7 @@ public class QuickHull3D {
     return false;
   }
 
-  protected void calculateHorizon(Point3d eyePnt, HalfEdge edge0, Face face, List<HalfEdge> horizon) {
+  private void calculateHorizon(Point3d eyePnt, HalfEdge edge0, Face face, List<HalfEdge> horizon) {
     // oldFaces.add (face);
     deleteFacePoints(face, null);
     face.mark = Face.DELETED;
@@ -743,7 +677,7 @@ public class QuickHull3D {
     return face.getEdge(0);
   }
 
-  protected void addNewFaces(FaceList newFaces, Vertex eyeVtx, List<HalfEdge> horizon) {
+  private void addNewFaces(FaceList newFaces, Vertex eyeVtx, List<HalfEdge> horizon) {
     newFaces.clear();
     HalfEdge hedgeSidePrev = null;
     HalfEdge hedgeSideBegin = null;
@@ -764,7 +698,7 @@ public class QuickHull3D {
     hedgeSideBegin.next.setOpposite(hedgeSidePrev);
   }
 
-  protected Vertex nextPointToAdd() {
+  private Vertex nextPointToAdd() {
     if (!claimed.isEmpty()) {
       Face eyeFace = claimed.first().face;
       Vertex eyeVtx = null;
@@ -781,7 +715,7 @@ public class QuickHull3D {
     return null;
   }
 
-  protected void addPointToHull(Vertex eyeVtx) {
+  private void addPointToHull(Vertex eyeVtx) {
     horizon.clear();
     unclaimed.clear();
     if (debug) {
@@ -794,27 +728,24 @@ public class QuickHull3D {
     addNewFaces(newFaces, eyeVtx, horizon);
     // first merge pass ... merge faces which are non-convex
     // as determined by the larger face
-    for (Face face = newFaces.head(); face != null; face = face.next) {
-      if (face.mark == Face.VISIBLE) {
+    for (Face face = newFaces.head(); face != null; face = face.next)
+      if (face.mark == Face.VISIBLE)
         while (doAdjacentMerge(face, NONCONVEX_WRT_LARGER_FACE)) {
           // ---
         }
-      }
-    }
     // second merge pass ... merge faces which are non-convex
     // wrt either face
-    for (Face face = newFaces.head(); face != null; face = face.next) {
+    for (Face face = newFaces.head(); face != null; face = face.next)
       if (face.mark == Face.NON_CONVEX) {
         face.mark = Face.VISIBLE;
         while (doAdjacentMerge(face, NONCONVEX)) {
           // ---
         }
       }
-    }
     resolveUnclaimedPoints(newFaces);
   }
 
-  protected void buildHull() {
+  private void buildHull() {
     int cnt = 0;
     Vertex eyeVtx;
     computeMaxAndMin();
@@ -841,7 +772,7 @@ public class QuickHull3D {
     } while (he != he0);
   }
 
-  protected void reindexFacesAndVertices() {
+  private void reindexFacesAndVertices() {
     for (int i = 0; i < numPoints; i++) {
       pointBuffer[i].index = -1;
     }
@@ -867,7 +798,7 @@ public class QuickHull3D {
     }
   }
 
-  protected boolean checkFaceConvexity(Face face, double tol, PrintStream ps) {
+  private boolean checkFaceConvexity(Face face, double tol, PrintStream ps) {
     double dist;
     HalfEdge he = face.he0;
     do {
@@ -903,7 +834,7 @@ public class QuickHull3D {
    * @param tol
    * @param ps
    * @return */
-  protected boolean checkFaces(double tol, PrintStream ps) {
+  private boolean checkFaces(double tol, PrintStream ps) {
     for (Face face : faces)
       if (face.mark == Face.VISIBLE)
         if (!checkFaceConvexity(face, tol, ps))
