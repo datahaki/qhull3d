@@ -3,9 +3,6 @@ package ch.alpine.qhull3d;
 import org.junit.jupiter.api.Test;
 
 class QhullTest {
-  static double[] coords = new double[] {};
-  static int[][] faces = new int[][] {};
-
   @Test
   void testSimple() {
     QuickHull3D hull = new QuickHull3D();

@@ -10,8 +10,6 @@
  * software. */
 package ch.alpine.qhull3d;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -230,9 +228,8 @@ public class QuickHull3D {
       claimed.delete(face.outside, end);
       end.next = null;
       return face.outside;
-    } else {
-      return null;
     }
+    return null;
   }
 
   /** Creates an empty convex hull object. */
@@ -290,25 +287,6 @@ public class QuickHull3D {
         he = he.next;
       } while (he != face.he0);
       faces.add(face);
-    }
-  }
-
-  private void printQhullErrors(Process proc) throws IOException {
-    boolean wrote = false;
-    InputStream es = proc.getErrorStream();
-    while (es.available() > 0) {
-      System.out.write(es.read());
-      wrote = true;
-    }
-    if (wrote) {
-      System.out.println();
-    }
-  }
-
-  private void printPoints(PrintStream ps) {
-    for (int i = 0; i < numPoints; i++) {
-      Point3d pnt = pointBuffer[i].pnt;
-      ps.println(pnt.x + ", " + pnt.y + ", " + pnt.z + ",");
     }
   }
 
@@ -829,7 +807,6 @@ public class QuickHull3D {
     do {
       Face oppFace = hedge.oppositeFace();
       boolean merge = false;
-      double dist1, dist2;
       if (mergeType == NONCONVEX) { // then merge faces if they are definitively non-convex
         if (oppFaceDistance(hedge) > -tolerance || oppFaceDistance(hedge.opposite) > -tolerance) {
           merge = true;
@@ -839,7 +816,7 @@ public class QuickHull3D {
         // wrt to the larger face; otherwise, just mark
         // the face non-convex for the second pass.
         if (face.area > oppFace.area) {
-          if ((dist1 = oppFaceDistance(hedge)) > -tolerance) {
+          if (oppFaceDistance(hedge) > -tolerance) {
             merge = true;
           } else if (oppFaceDistance(hedge.opposite) > -tolerance) {
             convex = false;
@@ -944,9 +921,8 @@ public class QuickHull3D {
         }
       }
       return eyeVtx;
-    } else {
-      return null;
     }
+    return null;
   }
 
   protected void addPointToHull(Vertex eyeVtx) {
@@ -964,8 +940,9 @@ public class QuickHull3D {
     // as determined by the larger face
     for (Face face = newFaces.first(); face != null; face = face.next) {
       if (face.mark == Face.VISIBLE) {
-        while (doAdjacentMerge(face, NONCONVEX_WRT_LARGER_FACE))
-          ;
+        while (doAdjacentMerge(face, NONCONVEX_WRT_LARGER_FACE)) {
+          // ---
+        }
       }
     }
     // second merge pass ... merge faces which are non-convex
@@ -973,8 +950,9 @@ public class QuickHull3D {
     for (Face face = newFaces.first(); face != null; face = face.next) {
       if (face.mark == Face.NON_CONVEX) {
         face.mark = Face.VISIBLE;
-        while (doAdjacentMerge(face, NONCONVEX))
-          ;
+        while (doAdjacentMerge(face, NONCONVEX)) {
+          // ---
+        }
       }
     }
     resolveUnclaimedPoints(newFaces);
@@ -998,7 +976,7 @@ public class QuickHull3D {
     }
   }
 
-  private void markFaceVertices(Face face, int mark) {
+  private static void markFaceVertices(Face face, int mark) {
     HalfEdge he0 = face.getFirstEdge();
     HalfEdge he = he0;
     do {
@@ -1013,8 +991,8 @@ public class QuickHull3D {
     }
     // remove inactive faces and mark active vertices
     numFaces = 0;
-    for (Iterator it = faces.iterator(); it.hasNext();) {
-      Face face = (Face) it.next();
+    for (Iterator<Face> it = faces.iterator(); it.hasNext();) {
+      Face face = it.next();
       if (face.mark != Face.VISIBLE) {
         it.remove();
       } else {

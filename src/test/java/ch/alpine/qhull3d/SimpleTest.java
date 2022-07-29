@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
  * <pre>
  * java quickhull3d.SimpleExample
  * </pre> */
-class SimpleExample {
+class SimpleTest {
   /** Run for a simple demonstration of QuickHull3D. */
   @Test
   void testSimple() {
