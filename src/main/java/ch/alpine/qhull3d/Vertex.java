@@ -20,11 +20,4 @@ class Vertex {
   public Vertex() {
     pnt = new Point3d();
   }
-
-  /** Constructs a vertex with the specified coordinates
-   * and index. */
-  public Vertex(double x, double y, double z, int idx) {
-    pnt = new Point3d(x, y, z);
-    index = idx;
-  }
 }

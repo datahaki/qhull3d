@@ -38,31 +38,12 @@ class HalfEdge {
     face = f;
   }
 
-  public HalfEdge() {
-  }
-
-  /** Sets the value of the next edge adjacent
-   * (counter-clockwise) to this one within the triangle.
-   *
-   * @param edge next adjacent edge */
-  public void setNext(HalfEdge edge) {
-    next = edge;
-  }
-
   /** Gets the value of the next edge adjacent
    * (counter-clockwise) to this one within the triangle.
    *
    * @return next adjacent edge */
   public HalfEdge getNext() {
     return next;
-  }
-
-  /** Sets the value of the previous edge adjacent (clockwise) to
-   * this one within the triangle.
-   *
-   * @param edge previous adjacent edge */
-  public void setPrev(HalfEdge edge) {
-    prev = edge;
   }
 
   /** Gets the value of the previous edge adjacent (clockwise) to
@@ -126,15 +107,6 @@ class HalfEdge {
     if (tail() != null)
       return "" + tail().index + "-" + head().index;
     return "?-" + head().index;
-  }
-
-  /** Returns the length of this half-edge.
-   *
-   * @return half-edge length */
-  public double length() {
-    if (tail() != null)
-      return head().pnt.distance(tail().pnt);
-    return -1;
   }
 
   /** Returns the length squared of this half-edge.

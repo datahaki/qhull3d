@@ -24,26 +24,6 @@ class Vector3d {
   /** Third element */
   public double z;
 
-  /** Creates a 3-vector and initializes its elements to 0. */
-  public Vector3d() {
-  }
-
-  /** Creates a 3-vector by copying an existing one.
-   *
-   * @param v vector to be copied */
-  public Vector3d(Vector3d v) {
-    set(v);
-  }
-
-  /** Creates a 3-vector with the supplied element values.
-   *
-   * @param x first element
-   * @param y second element
-   * @param z third element */
-  public Vector3d(double x, double y, double z) {
-    set(x, y, z);
-  }
-
   /** Gets a single element of this vector.
    * Elements 0, 1, and 2 correspond to x, y, and z.
    *
@@ -59,20 +39,6 @@ class Vector3d {
     };
   }
 
-  /** Sets a single element of this vector.
-   * Elements 0, 1, and 2 correspond to x, y, and z.
-   *
-   * @param i element index
-   * @param value element value */
-  public void set(int i, double value) {
-    switch (i) {
-    case 0 -> x = value;
-    case 1 -> y = value;
-    case 2 -> z = value;
-    default -> throw new ArrayIndexOutOfBoundsException(i);
-    }
-  }
-
   /** Sets the values of this vector to those of v1.
    *
    * @param v1 vector whose values are copied */
@@ -80,16 +46,6 @@ class Vector3d {
     x = v1.x;
     y = v1.y;
     z = v1.z;
-  }
-
-  /** Adds vector v1 to v2 and places the result in this vector.
-   *
-   * @param v1 left-hand vector
-   * @param v2 right-hand vector */
-  public void add(Vector3d v1, Vector3d v2) {
-    x = v1.x + v2.x;
-    y = v1.y + v2.y;
-    z = v1.z + v2.z;
   }
 
   /** Adds this vector to v1 and places the result in this vector.
@@ -154,16 +110,6 @@ class Vector3d {
    * @return square of the 2 norm */
   public double normSquared() {
     return x * x + y * y + z * z;
-  }
-
-  /** Returns the Euclidean distance between this vector and vector v.
-   *
-   * @return distance between this vector and v */
-  public double distance(Vector3d v) {
-    double dx = x - v.x;
-    double dy = y - v.y;
-    double dz = z - v.z;
-    return Math.sqrt(dx * dx + dy * dy + dz * dz);
   }
 
   /** Returns the squared of the Euclidean distance between this vector

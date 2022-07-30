@@ -50,26 +50,6 @@ class Face {
     return face;
   }
 
-  public static Face create(Vertex[] vtxArray, int[] indices) {
-    Face face = new Face();
-    HalfEdge hePrev = null;
-    for (int j : indices) {
-      HalfEdge he = new HalfEdge(vtxArray[j], face);
-      if (hePrev != null) {
-        he.setPrev(hePrev);
-        hePrev.setNext(he);
-      } else {
-        face.he0 = he;
-      }
-      hePrev = he;
-    }
-    face.he0.setPrev(hePrev);
-    hePrev.setNext(face.he0);
-    // compute the normal and offset
-    face.computeNormalAndCentroid();
-    return face;
-  }
-
   // ---
   HalfEdge he0;
   private final Vector3d normal;
@@ -196,23 +176,6 @@ class Face {
 
   public HalfEdge getFirstEdge() {
     return he0;
-  }
-
-  /** Finds the half-edge within this face which has
-   * tail <code>vt</code> and head <code>vh</code>.
-   *
-   * @param vt tail point
-   * @param vh head point
-   * @return the half-edge, or null if none is found. */
-  public HalfEdge findEdge(Vertex vt, Vertex vh) {
-    HalfEdge he = he0;
-    do {
-      if (he.head() == vh && he.tail() == vt) {
-        return he;
-      }
-      he = he.next;
-    } while (he != he0);
-    return null;
   }
 
   /** Computes the distance from a point p to the plane of

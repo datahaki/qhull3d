@@ -127,7 +127,8 @@ public class QuickHull3D {
   /** Specifies that the distance tolerance should be
    * computed automatically from the input point data. */
   public static final double AUTOMATIC_TOLERANCE = -1;
-  protected final int findIndex = -1;
+  // ---
+  private static final int FIND_INDEX = -1;
   // estimated size of the point set
   protected double charLength;
   protected boolean debug = false;
@@ -553,12 +554,12 @@ public class QuickHull3D {
       }
       if (maxFace != null) {
         addPointToFace(vtx, maxFace);
-        if (debug && vtx.index == findIndex) {
-          System.out.println(findIndex + " CLAIMED BY " + maxFace.getVertexString());
+        if (debug && vtx.index == FIND_INDEX) {
+          System.out.println(FIND_INDEX + " CLAIMED BY " + maxFace.getVertexString());
         }
       } else {
-        if (debug && vtx.index == findIndex) {
-          System.out.println(findIndex + " DISCARDED");
+        if (debug && vtx.index == FIND_INDEX) {
+          System.out.println(FIND_INDEX + " DISCARDED");
         }
       }
     }
@@ -798,7 +799,7 @@ public class QuickHull3D {
     }
   }
 
-  private boolean checkFaceConvexity(Face face, double tol, PrintStream ps) {
+  private static boolean checkFaceConvexity(Face face, double tol, PrintStream ps) {
     double dist;
     HalfEdge he = face.he0;
     do {

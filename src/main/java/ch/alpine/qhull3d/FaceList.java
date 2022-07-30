@@ -23,9 +23,4 @@ class FaceList {
   public Face head() {
     return head;
   }
-
-  /** Returns true if this list is empty. */
-  public boolean isEmpty() {
-    return head == null;
-  }
 }
