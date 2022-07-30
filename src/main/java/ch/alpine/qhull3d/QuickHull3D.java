@@ -79,9 +79,6 @@ import java.util.List;
  *
  * @author John E. Lloyd, Fall 2004 */
 public class QuickHull3D {
-  /** Specifies that (on output) vertex indices for a face should be
-   * listed in clockwise order. */
-  public static final int CLOCKWISE = 0x1;
   /** Specifies that (on output) the vertex indices for a face should be
    * numbered starting from 1. */
   public static final int INDEXED_FROM_ONE = 0x2;
@@ -458,7 +455,6 @@ public class QuickHull3D {
   }
 
   private void getFaceIndices(int[] indices, Face face, int flags) {
-    boolean ccw = (flags & CLOCKWISE) == 0;
     boolean indexedFromOne = (flags & INDEXED_FROM_ONE) != 0;
     boolean pointRelative = (flags & POINT_RELATIVE) != 0;
     HalfEdge hedge = face.he0;
@@ -470,7 +466,7 @@ public class QuickHull3D {
       if (indexedFromOne)
         idx++;
       indices[k++] = idx;
-      hedge = ccw ? hedge.next() : hedge.prev();
+      hedge = hedge.next();
     } while (hedge != face.he0);
   }
 
