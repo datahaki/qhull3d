@@ -269,6 +269,7 @@ class Face {
             + hedgeOpp.getOpposite().getVertexString());
       }
       if (hedgeOpp.head() != hedge.tail() || hedge.head() != hedgeOpp.tail()) {
+        // jan experienced this condition for cuboid
         throw new RuntimeException("face " + getVertexString() + ": " + "half edge " + hedge.getVertexString() + " reflected by " + hedgeOpp.getVertexString());
       }
       Face oppFace = hedgeOpp.face;

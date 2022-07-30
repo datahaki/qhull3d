@@ -104,8 +104,8 @@ public class QuickHull3D {
   /** estimated size of the point set */
   protected double charLength;
   protected boolean debug = false;
-  protected Vertex[] pointBuffer = new Vertex[0];
-  protected int[] vertexPointIndices = new int[0];
+  protected Vertex[] pointBuffer;
+  protected int[] vertexPointIndices;
   protected int numVertices;
   protected int numFaces;
   protected int numPoints;
@@ -128,20 +128,18 @@ public class QuickHull3D {
     if (coords.length / 3 < nump)
       throw new IllegalArgumentException("Coordinate array too small for specified number of points");
     // ---
-    initBuffers(nump);
-    setPoints(coords, nump);
+    initBuffers(coords, nump);
     buildHull();
   }
 
-  private void initBuffers(int nump) {
-    if (pointBuffer.length < nump) {
-      Vertex[] newBuffer = new Vertex[nump];
-      vertexPointIndices = new int[nump];
-      System.arraycopy(pointBuffer, 0, newBuffer, 0, pointBuffer.length);
-      for (int i = pointBuffer.length; i < nump; i++) {
-        newBuffer[i] = new Vertex();
-      }
-      pointBuffer = newBuffer;
+  private void initBuffers(double[] coords, int nump) {
+    pointBuffer = new Vertex[nump];
+    vertexPointIndices = new int[nump];
+    for (int index = 0; index < nump; ++index) {
+      Vertex vertex = new Vertex();
+      vertex.pnt.set(coords[index * 3 + 0], coords[index * 3 + 1], coords[index * 3 + 2]);
+      vertex.index = index;
+      pointBuffer[index] = vertex;
     }
     faces.clear();
     claimed.clear();
@@ -239,14 +237,6 @@ public class QuickHull3D {
         face.triangulate(newFaces, minArea); // splitFace (face);
     for (Face face = newFaces.head(); face != null; face = face.next) {
       faces.add(face);
-    }
-  }
-
-  private void setPoints(double[] coords, int nump) {
-    for (int i = 0; i < nump; i++) {
-      Vertex vtx = pointBuffer[i];
-      vtx.pnt.set(coords[i * 3 + 0], coords[i * 3 + 1], coords[i * 3 + 2]);
-      vtx.index = i;
     }
   }
 
@@ -388,9 +378,8 @@ public class QuickHull3D {
     faces.addAll(Arrays.asList(tris).subList(0, 4));
     for (int i = 0; i < numPoints; i++) {
       Vertex v = pointBuffer[i];
-      if (v == vtx[0] || v == vtx[1] || v == vtx[2] || v == vtx[3]) {
+      if (v == vtx[0] || v == vtx[1] || v == vtx[2] || v == vtx[3])
         continue;
-      }
       maxDist = tolerance;
       Face maxFace = null;
       for (int k = 0; k < 4; k++) {
@@ -400,9 +389,8 @@ public class QuickHull3D {
           maxDist = dist;
         }
       }
-      if (maxFace != null) {
+      if (maxFace != null)
         addPointToFace(v, maxFace);
-      }
     }
   }
 
@@ -410,7 +398,7 @@ public class QuickHull3D {
    * with respect to the original input points.
    *
    * @return vertex indices with respect to the original points */
-  public int[] getVertexPointIndices() {
+  /* package */ int[] getVertexPointIndices() {
     int[] indices = new int[numVertices];
     System.arraycopy(vertexPointIndices, 0, indices, 0, numVertices);
     return indices;
@@ -423,7 +411,7 @@ public class QuickHull3D {
    * respect to the hull vertices (as opposed to the input points), are
    * zero-based, and are arranged counter-clockwise. However, this
    * can be changed by setting {@link #POINT_RELATIVE
-   * POINT_RELATIVE}, {@link #INDEXED_FROM_ONE INDEXED_FROM_ONE}, or
+   * POINT_RELATIVE}, INDEXED_FROM_ONE, or
    * {@link #CLOCKWISE CLOCKWISE} in the indexFlags parameter.
    *
    * @param indexFlags specifies index characteristics (0 results
@@ -442,7 +430,6 @@ public class QuickHull3D {
   }
 
   private void getFaceIndices(int[] indices, Face face, int flags) {
-    boolean indexedFromOne = (flags & INDEXED_FROM_ONE) != 0;
     boolean pointRelative = (flags & POINT_RELATIVE) != 0;
     HalfEdge hedge = face.he0;
     int k = 0;
@@ -450,8 +437,6 @@ public class QuickHull3D {
       int idx = hedge.head().index;
       if (pointRelative)
         idx = vertexPointIndices[idx];
-      if (indexedFromOne)
-        idx++;
       indices[k++] = idx;
       hedge = hedge.next();
     } while (hedge != face.he0);
