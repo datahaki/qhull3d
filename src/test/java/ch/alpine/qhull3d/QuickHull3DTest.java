@@ -4,55 +4,42 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
 
 /** some test cases furnished by Mariano Zelke, Berlin */
 class QuickHull3DTest {
-  @Test
+  @RepeatedTest(10)
   void testRandom() {
-    System.out.println("Testing 20 to 200 random points ...");
-    for (int n = 20; n < 200; n += 10) { // System.out.println (n);
-      for (int i = 0; i < 10; i++) {
-        QuickHull3DHelper tester = new QuickHull3DHelper();
-        double[] coords = TestHelper.randomPoints(n, 1.0);
-        tester.test(coords);
-      }
+    for (int n = 20; n < 200; n += 10) {
+      QuickHull3DHelper tester = new QuickHull3DHelper();
+      double[] coords = TestHelper.randomPoints(n, 1.0);
+      tester.test(coords);
     }
   }
 
-  @Test
+  @RepeatedTest(10)
   void testSpherical() {
-    System.out.println("Testing 20 to 200 random points in a sphere ...");
-    for (int n = 20; n < 200; n += 10) { // System.out.println (n);
-      for (int i = 0; i < 10; i++) {
-        QuickHull3DHelper tester = new QuickHull3DHelper();
-        double[] coords = TestHelper.randomSphericalPoints(n, 1.0);
-        tester.test(coords);
-      }
+    for (int n = 20; n < 200; n += 10) {
+      QuickHull3DHelper tester = new QuickHull3DHelper();
+      double[] coords = TestHelper.randomSphericalPoints(n, 1.0);
+      tester.test(coords);
     }
   }
 
-  @Test
+  @RepeatedTest(10)
   void testCubed() {
-    System.out.println("Testing 20 to 200 random points clipped to a cube ...");
-    for (int n = 20; n < 200; n += 10) { // System.out.println (n);
-      for (int i = 0; i < 10; i++) {
-        QuickHull3DHelper tester = new QuickHull3DHelper();
-        double[] coords = TestHelper.randomCubedPoints(n, 1.0, 0.5);
-        tester.test(coords);
-      }
+    for (int n = 20; n < 200; n += 10) {
+      QuickHull3DHelper tester = new QuickHull3DHelper();
+      double[] coords = TestHelper.randomCubedPoints(n, 1.0, 0.5);
+      tester.test(coords);
     }
   }
 
-  @Test
+  @RepeatedTest(10)
   void testGrid() {
-    System.out.println("Testing 8 to 1000 randomly shuffled points on a grid ...");
-    for (int n = 2; n <= 10; n++) { // System.out.println (n*n*n);
-      for (int i = 0; i < 10; i++) {
-        QuickHull3DHelper tester = new QuickHull3DHelper();
-        double[] coords = TestHelper.randomGridPoints(n, 4.0);
-        tester.test(coords);
-      }
+    for (int n = 2; n <= 10; n++) {
+      QuickHull3DHelper tester = new QuickHull3DHelper();
+      double[] coords = TestHelper.randomGridPoints(n, 4.0);
+      tester.test(coords);
     }
   }
 

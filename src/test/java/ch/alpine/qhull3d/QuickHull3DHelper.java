@@ -10,6 +10,10 @@
  * software. */
 package ch.alpine.qhull3d;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 /** Testing class for QuickHull3D. Running the command
  * <pre>
  * java quickhull3d.QuickHull3DTest
@@ -26,14 +30,12 @@ package ch.alpine.qhull3d;
  *
  * @author John E. Lloyd, Fall 2004 */
 public class QuickHull3DHelper {
-  static boolean doTesting = true;
-  static boolean doTiming = false;
-  boolean debugEnable = false;
   static final int NO_DEGENERACY = 0;
   static final int EDGE_DEGENERACY = 1;
   static final int VERTEX_DEGENERACY = 2;
-  static final boolean testRotation = true;
   static final int degeneracyTest = VERTEX_DEGENERACY;
+  // ---
+  boolean debugEnable = false;
 
   /** Returns true if two face index sets are equal,
    * modulo a cyclical permuation.
@@ -65,15 +67,12 @@ public class QuickHull3DHelper {
 
   int cnt = 0;
 
-  void singleTest(double[] coords, int[][] checkFaces) {
+  void singleTest(double[] coords) {
     QuickHull3D hull = new QuickHull3D(coords);
     hull.setDebug(debugEnable);
     hull.buildHull();
     if (!hull.check(System.out))
       throw new RuntimeException();
-    if (checkFaces != null) {
-      // explicitFaceCheck(hull, checkFaces);
-    }
     if (degeneracyTest != NO_DEGENERACY) {
       degenerateTest(hull, coords);
     }
@@ -102,13 +101,19 @@ public class QuickHull3DHelper {
   }
 
   void test(double[] coords) {
-    double[][] rpyList = new double[][] { { 0, 0, 0 }, { 10, 20, 30 }, { -45, 60, 91 }, { 125, 67, 81 } };
-    double[] xcoords = new double[coords.length];
-    singleTest(coords, null);
-    if (testRotation) {
+    singleTest(coords);
+    {
+      List<double[]> rpyList = new ArrayList<>();
+      rpyList.add(new double[] { 0, 0, 0 });
+      rpyList.add(new double[] { 10, 20, 30 });
+      rpyList.add(new double[] { -45, 60, 91 });
+      rpyList.add(new double[] { 125, 67, 81 });
+      Random random = new Random();
+      rpyList.add(new double[] { random.nextInt(180) - 90, random.nextInt(180) - 90, random.nextInt(180) - 90 });
       for (double[] rpy : rpyList) {
+        double[] xcoords = new double[coords.length];
         TestHelper.rotateCoords(xcoords, coords, Math.toRadians(rpy[0]), Math.toRadians(rpy[1]), Math.toRadians(rpy[2]));
-        singleTest(xcoords, null);
+        singleTest(xcoords);
       }
     }
   }
