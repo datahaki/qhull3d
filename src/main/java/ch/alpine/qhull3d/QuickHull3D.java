@@ -13,7 +13,6 @@ package ch.alpine.qhull3d;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 /** Computes the convex hull of a set of three dimensional points.
@@ -135,7 +134,8 @@ public class QuickHull3D {
       if (debug)
         System.out.println("iteration " + cnt + " done");
     }
-    reindexFacesAndVertices();
+    /* remove inactive faces and mark active vertices */
+    faces.removeIf(face -> face.mark != Face.VISIBLE);
     if (debug)
       System.out.println("hull done");
   }
@@ -605,15 +605,6 @@ public class QuickHull3D {
         }
       }
     resolveUnclaimedPoints(newFaces);
-  }
-
-  /** remove inactive faces and mark active vertices */
-  private void reindexFacesAndVertices() {
-    for (Iterator<Face> it = faces.iterator(); it.hasNext();) {
-      Face face = it.next();
-      if (face.mark != Face.VISIBLE)
-        it.remove();
-    }
   }
 
   private int numPoints() {

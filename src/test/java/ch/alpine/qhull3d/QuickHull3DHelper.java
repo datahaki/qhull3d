@@ -363,7 +363,7 @@ public class QuickHull3DHelper {
     }
   }
 
-  void test(double[] coords, int[][] checkFaces) throws Exception {
+  void test(double[] coords, int[][] checkFaces) {
     double[][] rpyList = new double[][] { { 0, 0, 0 }, { 10, 20, 30 }, { -45, 60, 91 }, { 125, 67, 81 } };
     double[] xcoords = new double[coords.length];
     singleTest(coords, checkFaces);
