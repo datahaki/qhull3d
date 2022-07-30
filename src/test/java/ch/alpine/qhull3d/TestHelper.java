@@ -241,5 +241,4 @@ enum TestHelper {
     v.y = generator.nextDouble() * range + lower;
     v.z = generator.nextDouble() * range + lower;
   }
-
 }
