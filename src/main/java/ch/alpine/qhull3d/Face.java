@@ -216,15 +216,6 @@ class Face {
     return s;
   }
 
-  public void getVertexIndices(int[] idxs) {
-    HalfEdge he = he0;
-    int i = 0;
-    do {
-      idxs[i++] = he.head().index;
-      he = he.next;
-    } while (he != he0);
-  }
-
   private Face connectHalfEdges(HalfEdge hedgePrev, HalfEdge hedge) {
     Face discardedFace = null;
     if (hedgePrev.oppositeFace() == hedge.oppositeFace()) { // then there is a redundant edge that we can get rid off

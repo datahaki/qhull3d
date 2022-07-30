@@ -286,10 +286,8 @@ public class QuickHull3DHelper {
     if (triangulate) {
       hull.triangulate();
     }
-    if (!hull.check(System.out)) {
-      (new Throwable()).printStackTrace();
+    if (!hull.check(System.out))
       throw new RuntimeException();
-    }
     if (checkFaces != null) {
       explicitFaceCheck(hull, checkFaces);
     }
@@ -340,10 +338,8 @@ public class QuickHull3DHelper {
         System.out.println(coordsx[i * 3 + 0] + ", " + coordsx[i * 3 + 1] + ", " + coordsx[i * 3 + 2] + ", ");
       }
     }
-    if (!xhull.check(System.out)) {
-      (new Throwable()).printStackTrace();
+    if (!xhull.check(System.out))
       throw new RuntimeException();
-    }
   }
 
   void rotateCoords(double[] res, double[] xyz, double roll, double pitch, double yaw) {

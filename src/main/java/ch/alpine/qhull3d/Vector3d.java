@@ -12,7 +12,7 @@ package ch.alpine.qhull3d;
 
 /** A three-element vector. This class is actually a reduced version of the
  * Vector3d class contained in the author's matlib package (which was partly
- * inspired by javax.vecmath). Only a mininal number of methods
+ * inspired by javax.vecmath). Only a minimal number of methods
  * which are relevant to convex hull generation are supplied here.
  *
  * @author John E. Lloyd, Fall 2004 */

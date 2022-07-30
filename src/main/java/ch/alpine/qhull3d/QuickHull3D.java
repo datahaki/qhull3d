@@ -455,13 +455,6 @@ public class QuickHull3D {
     }
   }
 
-  /** Returns the number of vertices in this hull.
-   *
-   * @return number of vertices */
-  public int getNumVertices() {
-    return numVertices;
-  }
-
   /** Returns the vertex points in this hull.
    *
    * @return array of vertex points */
@@ -480,13 +473,6 @@ public class QuickHull3D {
     int[] indices = new int[numVertices];
     System.arraycopy(vertexPointIndices, 0, indices, 0, numVertices);
     return indices;
-  }
-
-  /** Returns the number of faces in this hull.
-   *
-   * @return number of faces */
-  public int getNumFaces() {
-    return faces.size();
   }
 
   /** Returns the faces associated with this hull.
@@ -846,7 +832,7 @@ public class QuickHull3D {
   /** Checks the correctness of the hull using the distance tolerance
    * returned by {@link QuickHull3D#getDistanceTolerance
    * getDistanceTolerance}; see
-   * {@link QuickHull3D#check(PrintStream,double)
+   * check
    * check(PrintStream,double)} for details.
    *
    * @param ps print stream for diagnostic messages; may be
