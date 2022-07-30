@@ -92,8 +92,6 @@ public class QuickHull3D {
    * computed automatically from the input point data. */
   public static final double AUTOMATIC_TOLERANCE = -1;
   // ---
-  private static final int FIND_INDEX = -1;
-  // ---
   private final Vertex[] pointBuffer;
   private final Vertex[] maxVtxs = new Vertex[3];
   private final Vertex[] minVtxs = new Vertex[3];
@@ -441,12 +439,12 @@ public class QuickHull3D {
       }
       if (maxFace != null) {
         addPointToFace(vtx, maxFace);
-        if (debug && vtx.index == FIND_INDEX) {
-          System.out.println(FIND_INDEX + " CLAIMED BY " + maxFace.getVertexString());
+        if (debug) {
+          System.out.println("CLAIMED BY " + maxFace.getVertexString());
         }
       } else {
-        if (debug && vtx.index == FIND_INDEX) {
-          System.out.println(FIND_INDEX + " DISCARDED");
+        if (debug) {
+          System.out.println("DISCARDED");
         }
       }
     }
