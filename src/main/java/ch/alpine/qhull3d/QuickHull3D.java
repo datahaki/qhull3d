@@ -122,28 +122,31 @@ public class QuickHull3D {
    * than four, or the points appear to be coincident, colinear, or
    * coplanar. */
   public void build(double[] coords) throws IllegalArgumentException {
-    build(coords, coords.length / 3);
-  }
-
-  /** Constructs the convex hull of a set of points whose
-   * coordinates are given by an array of doubles.
-   *
-   * @param coords x, y, and z coordinates of each input
-   * point. The length of this array must be at least three times
-   * <code>nump</code>.
-   * @param nump number of input points
-   * @throws IllegalArgumentException the number of input points is less
-   * than four or greater than 1/3 the length of <code>coords</code>,
-   * or the points appear to be coincident, colinear, or
-   * coplanar. */
-  private void build(double[] coords, int nump) throws IllegalArgumentException {
+    int nump = coords.length / 3;
     if (nump < 4)
       throw new IllegalArgumentException("Less than four input points specified");
     if (coords.length / 3 < nump)
       throw new IllegalArgumentException("Coordinate array too small for specified number of points");
+    // ---
     initBuffers(nump);
     setPoints(coords, nump);
     buildHull();
+  }
+
+  private void initBuffers(int nump) {
+    if (pointBuffer.length < nump) {
+      Vertex[] newBuffer = new Vertex[nump];
+      vertexPointIndices = new int[nump];
+      System.arraycopy(pointBuffer, 0, newBuffer, 0, pointBuffer.length);
+      for (int i = pointBuffer.length; i < nump; i++) {
+        newBuffer[i] = new Vertex();
+      }
+      pointBuffer = newBuffer;
+    }
+    faces.clear();
+    claimed.clear();
+    numFaces = 0;
+    numPoints = nump;
   }
 
   /** Returns true if debugging is enabled.
@@ -237,22 +240,6 @@ public class QuickHull3D {
     for (Face face = newFaces.head(); face != null; face = face.next) {
       faces.add(face);
     }
-  }
-
-  private void initBuffers(int nump) {
-    if (pointBuffer.length < nump) {
-      Vertex[] newBuffer = new Vertex[nump];
-      vertexPointIndices = new int[nump];
-      System.arraycopy(pointBuffer, 0, newBuffer, 0, pointBuffer.length);
-      for (int i = pointBuffer.length; i < nump; i++) {
-        newBuffer[i] = new Vertex();
-      }
-      pointBuffer = newBuffer;
-    }
-    faces.clear();
-    claimed.clear();
-    numFaces = 0;
-    numPoints = nump;
   }
 
   private void setPoints(double[] coords, int nump) {
