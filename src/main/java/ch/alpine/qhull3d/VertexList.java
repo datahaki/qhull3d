@@ -12,11 +12,10 @@ class VertexList {
 
   /** Adds a vertex to the end of this list. */
   public void add(Vertex vtx) {
-    if (head == null) {
+    if (head == null)
       head = vtx;
-    } else {
+    else
       tail.next = vtx;
-    }
     vtx.prev = tail;
     vtx.next = null;
     tail = vtx;
@@ -30,49 +29,43 @@ class VertexList {
       tail.next = vtx;
     }
     vtx.prev = tail;
-    while (vtx.next != null) {
+    while (vtx.next != null)
       vtx = vtx.next;
-    }
     tail = vtx;
   }
 
   /** Deletes a vertex from this list. */
   public void delete(Vertex vtx) {
-    if (vtx.prev == null) {
+    if (vtx.prev == null)
       head = vtx.next;
-    } else {
+    else
       vtx.prev.next = vtx.next;
-    }
-    if (vtx.next == null) {
+    if (vtx.next == null)
       tail = vtx.prev;
-    } else {
+    else
       vtx.next.prev = vtx.prev;
-    }
   }
 
   /** Deletes a chain of vertices from this list. */
   public void delete(Vertex vtx1, Vertex vtx2) {
-    if (vtx1.prev == null) {
+    if (vtx1.prev == null)
       head = vtx2.next;
-    } else {
+    else
       vtx1.prev.next = vtx2.next;
-    }
-    if (vtx2.next == null) {
+    if (vtx2.next == null)
       tail = vtx1.prev;
-    } else {
+    else
       vtx2.next.prev = vtx1.prev;
-    }
   }
 
   /** Inserts a vertex into this list before another
    * specificed vertex. */
   public void insertBefore(Vertex vtx, Vertex next) {
     vtx.prev = next.prev;
-    if (next.prev == null) {
+    if (next.prev == null)
       head = vtx;
-    } else {
+    else
       next.prev.next = vtx;
-    }
     vtx.next = next;
     next.prev = vtx;
   }
