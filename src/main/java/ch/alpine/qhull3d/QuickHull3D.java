@@ -607,24 +607,13 @@ public class QuickHull3D {
     resolveUnclaimedPoints(newFaces);
   }
 
+  /** remove inactive faces and mark active vertices */
   private void reindexFacesAndVertices() {
-    // remove inactive faces and mark active vertices
     for (Iterator<Face> it = faces.iterator(); it.hasNext();) {
       Face face = it.next();
       if (face.mark != Face.VISIBLE)
         it.remove();
-      else
-        markFaceVertices(face);
     }
-  }
-
-  private static void markFaceVertices(Face face) {
-    HalfEdge he0 = face.getFirstEdge();
-    HalfEdge he = he0;
-    do {
-      he.head().marked = true;
-      he = he.next();
-    } while (he != he0);
   }
 
   private int numPoints() {
@@ -661,7 +650,6 @@ public class QuickHull3D {
     } while (he != face.he0);
     return true;
   }
-
 
   private boolean checkFaces(double tol, PrintStream ps) {
     for (Face face : faces)
