@@ -77,7 +77,7 @@ class Face {
       centroid.add(he.head().pnt);
       he = he.next();
     } while (he != he0);
-    centroid.scale(1 / (double) numVerts);
+    centroid.scale(1.0 / numVerts);
   }
 
   public void computeNormal(Vector3d normal, double minArea) {
@@ -240,42 +240,38 @@ class Face {
     return discardedFace;
   }
 
+  /** sanity check on the face */
   void checkConsistency() {
-    // do a sanity check on the face
     HalfEdge hedge = he0;
     double maxd = 0;
     int numv = 0;
-    if (numVerts < 3) {
+    if (numVerts < 3)
       throw new RuntimeException("degenerate face: " + getVertexString());
-    }
     do {
       HalfEdge hedgeOpp = hedge.getOpposite();
-      if (hedgeOpp == null) {
+      if (hedgeOpp == null)
         throw new RuntimeException("face " + getVertexString() + ": " + "unreflected half edge " + hedge.getVertexString());
-      } else if (hedgeOpp.getOpposite() != hedge) {
+      else //
+      if (hedgeOpp.getOpposite() != hedge)
         throw new RuntimeException("face " + getVertexString() + ": " + "opposite half edge " + hedgeOpp.getVertexString() + " has opposite "
             + hedgeOpp.getOpposite().getVertexString());
-      }
-      if (hedgeOpp.head() != hedge.tail() || hedge.head() != hedgeOpp.tail()) {
-        // jan experienced this condition for cuboid
+      if (hedgeOpp.head() != hedge.tail() || hedge.head() != hedgeOpp.tail())
+        // jan experienced this exception for cuboid
         throw new RuntimeException("face " + getVertexString() + ": " + "half edge " + hedge.getVertexString() + " reflected by " + hedgeOpp.getVertexString());
-      }
       Face oppFace = hedgeOpp.face;
-      if (oppFace == null) {
+      if (oppFace == null)
         throw new RuntimeException("face " + getVertexString() + ": " + "no face on half edge " + hedgeOpp.getVertexString());
-      } else if (oppFace.mark == DELETED) {
+      else //
+      if (oppFace.mark == DELETED)
         throw new RuntimeException("face " + getVertexString() + ": " + "opposite face " + oppFace.getVertexString() + " not on hull");
-      }
       double d = Math.abs(distanceToPlane(hedge.head().pnt));
-      if (d > maxd) {
+      if (d > maxd)
         maxd = d;
-      }
       numv++;
       hedge = hedge.next();
     } while (hedge != he0);
-    if (numv != numVerts) {
+    if (numv != numVerts)
       throw new RuntimeException("face " + getVertexString() + " numVerts=" + numVerts + " should be " + numv);
-    }
   }
 
   public List<Face> mergeAdjacentFace(HalfEdge hedgeAdj) {
@@ -314,7 +310,6 @@ class Face {
       discarded.add(discardedFace);
     computeNormalAndCentroid();
     checkConsistency();
-    // return numDiscarded;
     return discarded;
   }
 

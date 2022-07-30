@@ -80,9 +80,9 @@ class Vector3d {
    *
    * @param s scaling factor */
   public void scale(double s) {
-    x = s * x;
-    y = s * y;
-    z = s * z;
+    x *= s;
+    y *= s;
+    z *= s;
   }
 
   /** Scales the elements of vector v1 by <code>s</code> and places
