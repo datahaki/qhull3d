@@ -392,16 +392,6 @@ public class QuickHull3D {
     }
   }
 
-  /** Returns an array specifing the index of each hull vertex
-   * with respect to the original input points.
-   *
-   * @return vertex indices with respect to the original points */
-  /* package */ int[] getVertexPointIndices() {
-    int[] indices = new int[numVertices];
-    // System.arraycopy(vertexPointIndices, 0, indices, 0, numVertices);
-    return indices;
-  }
-
   /** Returns the faces associated with this hull.
    *
    * <p>Each face is represented by an integer array which gives the indices of
@@ -525,7 +515,6 @@ public class QuickHull3D {
   }
 
   private void calculateHorizon(Vector3d eyePnt, HalfEdge edge0, Face face, List<HalfEdge> horizon) {
-    // oldFaces.add (face);
     deleteFacePoints(face, null);
     face.mark = Face.DELETED;
     if (debug) {
@@ -636,11 +625,8 @@ public class QuickHull3D {
     numVertices = 0;
     for (int i = 0; i < numPoints(); i++) {
       Vertex vtx = pointBuffer[i];
-      if (vtx.marked) {
-        // vertexPointIndices[numVertices] = i;
-        // vtx.index =
-        numVertices++;
-      }
+      if (vtx.marked)
+        ++numVertices;
     }
   }
 

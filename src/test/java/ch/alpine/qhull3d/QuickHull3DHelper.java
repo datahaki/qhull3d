@@ -245,38 +245,6 @@ public class QuickHull3DHelper {
     return coords;
   }
 
-  void explicitFaceCheck(QuickHull3D hull, int[][] checkFaces) throws Exception {
-    int[][] faceIndices = hull.getFaces();
-    if (faceIndices.length != checkFaces.length) {
-      throw new Exception("Error: " + faceIndices.length + " faces vs. " + checkFaces.length);
-    }
-    // translate face indices back into original indices
-    int[] vtxIndices = hull.getVertexPointIndices();
-    for (int[] idxs : faceIndices) {
-      for (int k = 0; k < idxs.length; k++) {
-        idxs[k] = vtxIndices[idxs[k]];
-      }
-    }
-    for (int[] cf : checkFaces) {
-      int j;
-      for (j = 0; j < faceIndices.length; j++) {
-        if (faceIndices[j] != null) {
-          if (faceIndicesEqual(cf, faceIndices[j])) {
-            faceIndices[j] = null;
-            break;
-          }
-        }
-      }
-      if (j == faceIndices.length) {
-        String s = "";
-        for (int value : cf) {
-          s += value + " ";
-        }
-        throw new Exception("Error: face " + s + " not found");
-      }
-    }
-  }
-
   int cnt = 0;
 
   void singleTest(double[] coords, int[][] checkFaces) throws Exception {
