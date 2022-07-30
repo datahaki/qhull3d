@@ -115,6 +115,40 @@ public class QuickHull3D {
   protected double explicitTolerance = AUTOMATIC_TOLERANCE;
   protected double tolerance;
 
+  /** Constructs the convex hull of a set of points whose
+   * coordinates are given by an array of doubles.
+   *
+   * @param coords x, y, and z coordinates of each input
+   * point. The length of this array will be three times
+   * the number of input points.
+   * @throws IllegalArgumentException the number of input points is less
+   * than four, or the points appear to be coincident, colinear, or
+   * coplanar. */
+  public void build(double[] coords) throws IllegalArgumentException {
+    build(coords, coords.length / 3);
+  }
+
+  /** Constructs the convex hull of a set of points whose
+   * coordinates are given by an array of doubles.
+   *
+   * @param coords x, y, and z coordinates of each input
+   * point. The length of this array must be at least three times
+   * <code>nump</code>.
+   * @param nump number of input points
+   * @throws IllegalArgumentException the number of input points is less
+   * than four or greater than 1/3 the length of <code>coords</code>,
+   * or the points appear to be coincident, colinear, or
+   * coplanar. */
+  private void build(double[] coords, int nump) throws IllegalArgumentException {
+    if (nump < 4)
+      throw new IllegalArgumentException("Less than four input points specified");
+    if (coords.length / 3 < nump)
+      throw new IllegalArgumentException("Coordinate array too small for specified number of points");
+    initBuffers(nump);
+    setPoints(coords, nump);
+    buildHull();
+  }
+
   /** Returns true if debugging is enabled.
    *
    * @return true is debugging is enabled
@@ -191,40 +225,6 @@ public class QuickHull3D {
       return face.outside;
     }
     return null;
-  }
-
-  /** Constructs the convex hull of a set of points whose
-   * coordinates are given by an array of doubles.
-   *
-   * @param coords x, y, and z coordinates of each input
-   * point. The length of this array will be three times
-   * the number of input points.
-   * @throws IllegalArgumentException the number of input points is less
-   * than four, or the points appear to be coincident, colinear, or
-   * coplanar. */
-  public void build(double[] coords) throws IllegalArgumentException {
-    build(coords, coords.length / 3);
-  }
-
-  /** Constructs the convex hull of a set of points whose
-   * coordinates are given by an array of doubles.
-   *
-   * @param coords x, y, and z coordinates of each input
-   * point. The length of this array must be at least three times
-   * <code>nump</code>.
-   * @param nump number of input points
-   * @throws IllegalArgumentException the number of input points is less
-   * than four or greater than 1/3 the length of <code>coords</code>,
-   * or the points appear to be coincident, colinear, or
-   * coplanar. */
-  private void build(double[] coords, int nump) throws IllegalArgumentException {
-    if (nump < 4)
-      throw new IllegalArgumentException("Less than four input points specified");
-    if (coords.length / 3 < nump)
-      throw new IllegalArgumentException("Coordinate array too small for specified number of points");
-    initBuffers(nump);
-    setPoints(coords, nump);
-    buildHull();
   }
 
   /** Triangulates any non-triangular hull faces. In some cases, due to
@@ -458,21 +458,19 @@ public class QuickHull3D {
   }
 
   private void getFaceIndices(int[] indices, Face face, int flags) {
-    boolean ccw = ((flags & CLOCKWISE) == 0);
-    boolean indexedFromOne = ((flags & INDEXED_FROM_ONE) != 0);
-    boolean pointRelative = ((flags & POINT_RELATIVE) != 0);
+    boolean ccw = (flags & CLOCKWISE) == 0;
+    boolean indexedFromOne = (flags & INDEXED_FROM_ONE) != 0;
+    boolean pointRelative = (flags & POINT_RELATIVE) != 0;
     HalfEdge hedge = face.he0;
     int k = 0;
     do {
       int idx = hedge.head().index;
-      if (pointRelative) {
+      if (pointRelative)
         idx = vertexPointIndices[idx];
-      }
-      if (indexedFromOne) {
+      if (indexedFromOne)
         idx++;
-      }
       indices[k++] = idx;
-      hedge = (ccw ? hedge.next : hedge.prev);
+      hedge = (ccw ? hedge.next : hedge.prev());
     } while (hedge != face.he0);
   }
 
@@ -489,9 +487,8 @@ public class QuickHull3D {
             maxDist = dist;
             maxFace = newFace;
           }
-          if (maxDist > 1000 * tolerance) {
+          if (maxDist > 1000 * tolerance)
             break;
-          }
         }
       }
       if (maxFace != null) {
@@ -544,8 +541,9 @@ public class QuickHull3D {
         if (oppFaceDistance(hedge) > -tolerance || oppFaceDistance(hedge.opposite) > -tolerance) {
           merge = true;
         }
-      } else // mergeType == NONCONVEX_WRT_LARGER_FACE
-      { // merge faces if they are parallel or non-convex
+      } else {
+        // mergeType == NONCONVEX_WRT_LARGER_FACE
+        // merge faces if they are parallel or non-convex
         // wrt to the larger face; otherwise, just mark
         // the face non-convex for the second pass.
         if (face.area > oppFace.area) {
@@ -575,9 +573,8 @@ public class QuickHull3D {
       }
       hedge = hedge.next;
     } while (hedge != face.he0);
-    if (!convex) {
+    if (!convex)
       face.mark = Face.NON_CONVEX;
-    }
     return false;
   }
 
@@ -592,9 +589,8 @@ public class QuickHull3D {
     if (edge0 == null) {
       edge0 = face.getEdge(0);
       edge = edge0;
-    } else {
-      edge = edge0.getNext();
-    }
+    } else
+      edge = edge0.next();
     do {
       Face oppFace = edge.oppositeFace();
       if (oppFace.mark == Face.VISIBLE) {
@@ -607,7 +603,7 @@ public class QuickHull3D {
           }
         }
       }
-      edge = edge.getNext();
+      edge = edge.next();
     } while (edge != edge0);
   }
 

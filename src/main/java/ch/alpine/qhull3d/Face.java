@@ -41,11 +41,11 @@ class Face {
     HalfEdge he0 = new HalfEdge(v0, face);
     HalfEdge he1 = new HalfEdge(v1, face);
     HalfEdge he2 = new HalfEdge(v2, face);
-    he0.prev = he2;
+    he0.prev(he2);
     he0.next = he1;
-    he1.prev = he0;
+    he1.prev(he0);
     he1.next = he2;
-    he2.prev = he1;
+    he2.prev(he1);
     he2.next = he0;
     face.he0 = he0;
     // compute the normal and offset
@@ -171,7 +171,7 @@ class Face {
       i--;
     }
     while (i < 0) {
-      he = he.prev;
+      he = he.prev();
       i++;
     }
     return he;
@@ -228,26 +228,26 @@ class Face {
         he0 = hedge;
       }
       if (oppFace.numVertices() == 3) { // then we can get rid of the opposite face altogether
-        hedgeOpp = hedge.getOpposite().prev.getOpposite();
+        hedgeOpp = hedge.getOpposite().prev().getOpposite();
         oppFace.mark = DELETED;
         discardedFace = oppFace;
       } else {
         hedgeOpp = hedge.getOpposite().next;
-        if (oppFace.he0 == hedgeOpp.prev) {
+        if (oppFace.he0 == hedgeOpp.prev()) {
           oppFace.he0 = hedgeOpp;
         }
-        hedgeOpp.prev = hedgeOpp.prev.prev;
-        hedgeOpp.prev.next = hedgeOpp;
+        hedgeOpp.prev(hedgeOpp.prev().prev());
+        hedgeOpp.prev().next = hedgeOpp;
       }
-      hedge.prev = hedgePrev.prev;
-      hedge.prev.next = hedge;
+      hedge.prev(hedgePrev.prev());
+      hedge.prev().next = hedge;
       hedge.opposite = hedgeOpp;
       hedgeOpp.opposite = hedge;
       // oppFace was modified, so need to recompute
       oppFace.computeNormalAndCentroid();
     } else {
       hedgePrev.next = hedge;
-      hedge.prev = hedgePrev;
+      hedge.prev( hedgePrev);
     }
     return discardedFace;
   }
@@ -295,16 +295,16 @@ class Face {
     discarded.add(oppFace);
     oppFace.mark = DELETED;
     HalfEdge hedgeOpp = hedgeAdj.getOpposite();
-    HalfEdge hedgeAdjPrev = hedgeAdj.prev;
+    HalfEdge hedgeAdjPrev = hedgeAdj.prev();
     HalfEdge hedgeAdjNext = hedgeAdj.next;
-    HalfEdge hedgeOppPrev = hedgeOpp.prev;
+    HalfEdge hedgeOppPrev = hedgeOpp.prev();
     HalfEdge hedgeOppNext = hedgeOpp.next;
     while (hedgeAdjPrev.oppositeFace() == oppFace) {
-      hedgeAdjPrev = hedgeAdjPrev.prev;
+      hedgeAdjPrev = hedgeAdjPrev.prev();
       hedgeOppNext = hedgeOppNext.next;
     }
     while (hedgeAdjNext.oppositeFace() == oppFace) {
-      hedgeOppPrev = hedgeOppPrev.prev;
+      hedgeOppPrev = hedgeOppPrev.prev();
       hedgeAdjNext = hedgeAdjNext.next;
     }
     HalfEdge hedge;
@@ -338,22 +338,22 @@ class Face {
     hedge = he0.next;
     HalfEdge oppPrev = hedge.opposite;
     Face face0 = null;
-    for (hedge = hedge.next; hedge != he0.prev; hedge = hedge.next) {
-      Face face = createTriangle(v0, hedge.prev.head(), hedge.head(), minArea);
+    for (hedge = hedge.next; hedge != he0.prev(); hedge = hedge.next) {
+      Face face = createTriangle(v0, hedge.prev().head(), hedge.head(), minArea);
       face.he0.next.setOpposite(oppPrev);
-      face.he0.prev.setOpposite(hedge.opposite);
+      face.he0.prev().setOpposite(hedge.opposite);
       oppPrev = face.he0;
       newFaces.add(face);
       if (face0 == null) {
         face0 = face;
       }
     }
-    hedge = new HalfEdge(he0.prev.prev.head(), this);
+    hedge = new HalfEdge(he0.prev().prev().head(), this);
     hedge.setOpposite(oppPrev);
-    hedge.prev = he0;
-    hedge.prev.next = hedge;
-    hedge.next = he0.prev;
-    hedge.next.prev = hedge;
+    hedge.prev( he0);
+    hedge.prev().next = hedge;
+    hedge.next = he0.prev();
+    hedge.next.prev( hedge);
     computeNormalAndCentroid(minArea);
     checkConsistency();
     for (Face face = face0; face != null; face = face.next) {
