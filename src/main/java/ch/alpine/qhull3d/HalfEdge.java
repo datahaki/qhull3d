@@ -21,7 +21,7 @@ class HalfEdge {
   /** Triangular face associated with this half-edge. */
   Face face;
   /** Next half-edge in the triangle. */
-  HalfEdge next;
+  private HalfEdge next;
   /** Previous half-edge in the triangle. */
   private HalfEdge prev;
   /** Half-edge associated with the opposite triangle
@@ -44,6 +44,10 @@ class HalfEdge {
    * @return next adjacent edge */
   public HalfEdge next() {
     return next;
+  }
+
+  public void next(HalfEdge next) {
+    this.next = next;
   }
 
   /** Gets the value of the previous edge adjacent (clockwise) to

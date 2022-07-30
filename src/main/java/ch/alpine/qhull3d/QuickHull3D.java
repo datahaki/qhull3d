@@ -470,7 +470,7 @@ public class QuickHull3D {
       if (indexedFromOne)
         idx++;
       indices[k++] = idx;
-      hedge = (ccw ? hedge.next : hedge.prev());
+      hedge = ccw ? hedge.next() : hedge.prev();
     } while (hedge != face.he0);
   }
 
@@ -571,7 +571,7 @@ public class QuickHull3D {
         }
         return true;
       }
-      hedge = hedge.next;
+      hedge = hedge.next();
     } while (hedge != face.he0);
     if (!convex)
       face.mark = Face.NON_CONVEX;
@@ -624,14 +624,14 @@ public class QuickHull3D {
         System.out.println("new face: " + hedgeSide.face.getVertexString());
       }
       if (hedgeSidePrev != null) {
-        hedgeSide.next.setOpposite(hedgeSidePrev);
+        hedgeSide.next().setOpposite(hedgeSidePrev);
       } else {
         hedgeSideBegin = hedgeSide;
       }
       newFaces.add(hedgeSide.getFace());
       hedgeSidePrev = hedgeSide;
     }
-    hedgeSideBegin.next.setOpposite(hedgeSidePrev);
+    hedgeSideBegin.next().setOpposite(hedgeSidePrev);
   }
 
   private Vertex nextPointToAdd() {
@@ -704,7 +704,7 @@ public class QuickHull3D {
     HalfEdge he = he0;
     do {
       he.head().index = mark;
-      he = he.next;
+      he = he.next();
     } while (he != he0);
   }
 
@@ -754,13 +754,13 @@ public class QuickHull3D {
         }
         return false;
       }
-      if (he.next.oppositeFace() == he.oppositeFace()) {
+      if (he.next().oppositeFace() == he.oppositeFace()) {
         if (ps != null) {
           ps.println("Redundant vertex " + he.head().index + " in face " + face.getVertexString());
         }
         return false;
       }
-      he = he.next;
+      he = he.next();
     } while (he != face.he0);
     return true;
   }
