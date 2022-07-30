@@ -658,24 +658,24 @@ public class QuickHull3D {
       if (face.mark != Face.VISIBLE)
         it.remove();
       else
-        markFaceVertices(face, 0);
+        markFaceVertices(face);
     }
     // reindex vertices
     numVertices = 0;
     for (int i = 0; i < numPoints(); i++) {
       Vertex vtx = pointBuffer[i];
-      if (vtx.index == 0) {
+      if (vtx.marked) {
         vertexPointIndices[numVertices] = i;
         vtx.index = numVertices++;
       }
     }
   }
 
-  private static void markFaceVertices(Face face, int mark) {
+  private static void markFaceVertices(Face face) {
     HalfEdge he0 = face.getFirstEdge();
     HalfEdge he = he0;
     do {
-      he.head().index = mark;
+      he.head().marked = true;
       he = he.next();
     } while (he != he0);
   }

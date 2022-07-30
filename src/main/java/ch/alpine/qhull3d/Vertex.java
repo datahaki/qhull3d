@@ -15,4 +15,5 @@ class Vertex {
   Vertex next;
   /** Current face that this vertex is outside of. */
   Face face;
+  boolean marked = false;
 }
