@@ -138,10 +138,10 @@ public class QuickHull3D {
 
   public void buildHull() {
     int cnt = 0;
-    Vertex eyeVtx;
     computeMaxAndMin();
     createInitialSimplex();
-    while ((eyeVtx = nextPointToAdd()) != null) {
+    while (!claimed.isEmpty()) {
+      Vertex eyeVtx = nextPointToAdd();
       addPointToHull(eyeVtx);
       cnt++;
       if (debug) {
@@ -610,20 +610,17 @@ public class QuickHull3D {
   }
 
   private Vertex nextPointToAdd() {
-    if (!claimed.isEmpty()) {
-      Face eyeFace = claimed.first().face;
-      Vertex eyeVtx = null;
-      double maxDist = 0;
-      for (Vertex vtx = eyeFace.outside; vtx != null && vtx.face == eyeFace; vtx = vtx.next) {
-        double dist = eyeFace.distanceToPlane(vtx.pnt);
-        if (dist > maxDist) {
-          maxDist = dist;
-          eyeVtx = vtx;
-        }
+    Face eyeFace = claimed.first().face;
+    Vertex eyeVtx = null;
+    double maxDist = 0;
+    for (Vertex vtx = eyeFace.outside; vtx != null && vtx.face == eyeFace; vtx = vtx.next) {
+      double dist = eyeFace.distanceToPlane(vtx.pnt);
+      if (dist > maxDist) {
+        maxDist = dist;
+        eyeVtx = vtx;
       }
-      return eyeVtx;
     }
-    return null;
+    return eyeVtx;
   }
 
   private void addPointToHull(Vertex eyeVtx) {
