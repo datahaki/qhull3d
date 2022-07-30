@@ -472,7 +472,6 @@ public class QuickHull3DHelper {
   public void timingTests() {
     long t0, t1;
     int n = 10;
-    
     System.out.println("warming up ... ");
     for (int i = 0; i < 2; i++) {
       double[] coords = randomSphericalPoints(10000, 1.0);
@@ -482,9 +481,9 @@ public class QuickHull3DHelper {
     int cnt = 10;
     for (int i = 0; i < 4; i++) {
       n *= 10;
-      double[] coords = randomSphericalPoints(n, 1.0);
       t0 = System.currentTimeMillis();
       for (int k = 0; k < cnt; k++) {
+        double[] coords = randomSphericalPoints(n, 1.0);
         QuickHull3D hull = new QuickHull3D(coords);
         hull.buildHull();
       }

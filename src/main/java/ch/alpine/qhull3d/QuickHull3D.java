@@ -94,6 +94,8 @@ public class QuickHull3D {
   // ---
   private static final int FIND_INDEX = -1;
   // ---
+  protected final Vertex[] pointBuffer;
+  protected final int[] vertexPointIndices;
   private final Vertex[] maxVtxs = new Vertex[3];
   private final Vertex[] minVtxs = new Vertex[3];
   protected final List<Face> faces = new ArrayList<>(16);
@@ -104,11 +106,8 @@ public class QuickHull3D {
   /** estimated size of the point set */
   protected double charLength;
   protected boolean debug = false;
-  protected Vertex[] pointBuffer;
-  protected int[] vertexPointIndices;
   protected int numVertices;
-  protected int numFaces;
-  protected int numPoints;
+  protected int numFaces = 0;
   protected double explicitTolerance = AUTOMATIC_TOLERANCE;
   protected double tolerance;
 
@@ -128,10 +127,6 @@ public class QuickHull3D {
     if (coords.length / 3 < nump)
       throw new IllegalArgumentException("Coordinate array too small for specified number of points");
     // ---
-    initBuffers(coords, nump);
-  }
-
-  private void initBuffers(double[] coords, int nump) {
     pointBuffer = new Vertex[nump];
     vertexPointIndices = new int[nump];
     for (int index = 0; index < nump; ++index) {
@@ -140,10 +135,7 @@ public class QuickHull3D {
       vertex.index = index;
       pointBuffer[index] = vertex;
     }
-    faces.clear();
-    claimed.clear();
     numFaces = 0;
-    numPoints = nump;
   }
 
   /** Returns true if debugging is enabled.
@@ -246,7 +238,7 @@ public class QuickHull3D {
       maxVtxs[i] = minVtxs[i] = pointBuffer[0];
     max.set(pointBuffer[0].pnt);
     min.set(pointBuffer[0].pnt);
-    for (int i = 1; i < numPoints; i++) {
+    for (int i = 1; i < numPoints(); i++) {
       Vector3d pnt = pointBuffer[i].pnt;
       if (pnt.x > max.x) {
         max.x = pnt.x;
@@ -312,7 +304,7 @@ public class QuickHull3D {
     double maxSqr = 0;
     u01.sub(vtx[1].pnt, vtx[0].pnt);
     u01.normalize();
-    for (int i = 0; i < numPoints; i++) {
+    for (int i = 0; i < numPoints(); i++) {
       diff02.sub(pointBuffer[i].pnt, vtx[0].pnt);
       xprod.cross(u01, diff02);
       double lenSqr = xprod.normSquared();
@@ -335,7 +327,7 @@ public class QuickHull3D {
     nrml.normalize();
     double maxDist = 0;
     double d0 = vtx[2].pnt.dot(nrml);
-    for (int i = 0; i < numPoints; i++) {
+    for (int i = 0; i < numPoints(); i++) {
       double dist = Math.abs(pointBuffer[i].pnt.dot(nrml) - d0);
       if (dist > maxDist && pointBuffer[i] != vtx[0] && // paranoid
           pointBuffer[i] != vtx[1] && pointBuffer[i] != vtx[2]) {
@@ -375,7 +367,7 @@ public class QuickHull3D {
       }
     }
     faces.addAll(Arrays.asList(tris).subList(0, 4));
-    for (int i = 0; i < numPoints; i++) {
+    for (int i = 0; i < numPoints(); i++) {
       Vertex v = pointBuffer[i];
       if (v == vtx[0] || v == vtx[1] || v == vtx[2] || v == vtx[3])
         continue;
@@ -676,7 +668,7 @@ public class QuickHull3D {
   }
 
   private void reindexFacesAndVertices() {
-    for (int i = 0; i < numPoints; i++) {
+    for (int i = 0; i < numPoints(); i++) {
       pointBuffer[i].index = -1;
     }
     // remove inactive faces and mark active vertices
@@ -692,7 +684,7 @@ public class QuickHull3D {
     }
     // reindex vertices
     numVertices = 0;
-    for (int i = 0; i < numPoints; i++) {
+    for (int i = 0; i < numPoints(); i++) {
       Vertex vtx = pointBuffer[i];
       if (vtx.index == 0) {
         vertexPointIndices[numVertices] = i;
@@ -745,6 +737,10 @@ public class QuickHull3D {
     return true;
   }
 
+  private int numPoints() {
+    return pointBuffer.length;
+  }
+
   /** Checks the correctness of the hull using the distance tolerance
    * returned by {@link QuickHull3D#getDistanceTolerance
    * getDistanceTolerance}; see
@@ -765,7 +761,7 @@ public class QuickHull3D {
       return false;
     }
     // check point inclusion
-    for (int i = 0; i < numPoints; i++) {
+    for (int i = 0; i < numPoints(); i++) {
       Vector3d pnt = pointBuffer[i].pnt;
       for (Face face : faces)
         if (face.mark == Face.VISIBLE) {
