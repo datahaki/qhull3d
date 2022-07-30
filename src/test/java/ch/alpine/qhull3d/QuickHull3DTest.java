@@ -85,7 +85,6 @@ class QuickHull3DTest {
 
   @RepeatedTest(10)
   void testFails0() {
-    QuickHull3DHelper tester = new QuickHull3DHelper();
     double[] coords = TestHelper.randomDegeneratePoints(10, 0);
     QuickHull3D hull = new QuickHull3D(coords);
     Exception exception = assertThrows(Exception.class, () -> hull.buildHull());
@@ -94,7 +93,6 @@ class QuickHull3DTest {
 
   @RepeatedTest(10)
   void testFails1() {
-    QuickHull3DHelper tester = new QuickHull3DHelper();
     double[] coords = TestHelper.randomDegeneratePoints(10, 1);
     QuickHull3D hull = new QuickHull3D(coords);
     Exception exception = assertThrows(Exception.class, () -> hull.buildHull());
@@ -103,7 +101,6 @@ class QuickHull3DTest {
 
   @RepeatedTest(10)
   void testFails2() {
-    QuickHull3DHelper tester = new QuickHull3DHelper();
     double[] coords = TestHelper.randomDegeneratePoints(10, 2);
     QuickHull3D hull = new QuickHull3D(coords);
     Exception exception = assertThrows(Exception.class, () -> hull.buildHull());

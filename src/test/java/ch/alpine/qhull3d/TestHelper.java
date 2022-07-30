@@ -4,6 +4,9 @@ import java.util.Random;
 
 enum TestHelper {
   ;
+  private static final Random RANDOM = new Random(); // random number generator
+  private static final double epsScale = 2.0;
+
   /** Returns the coordinates for <code>num</code> points whose x, y, and
    * z values are randomly chosen within a given range.
    *
@@ -14,16 +17,16 @@ enum TestHelper {
     double[] coords = new double[num * 3];
     for (int i = 0; i < num; i++) {
       for (int k = 0; k < 3; k++) {
-        coords[i * 3 + k] = 2 * range * (QuickHull3DHelper.RANDOM.nextDouble() - 0.5);
+        coords[i * 3 + k] = 2 * range * (RANDOM.nextDouble() - 0.5);
       }
     }
     return coords;
   }
 
-  static void randomlyPerturb(Vector3d pnt, double tol) {
-    pnt.x += tol * (QuickHull3DHelper.RANDOM.nextDouble() - 0.5);
-    pnt.y += tol * (QuickHull3DHelper.RANDOM.nextDouble() - 0.5);
-    pnt.z += tol * (QuickHull3DHelper.RANDOM.nextDouble() - 0.5);
+  private static void randomlyPerturb(Vector3d pnt, double tol) {
+    pnt.x += tol * (RANDOM.nextDouble() - 0.5);
+    pnt.y += tol * (RANDOM.nextDouble() - 0.5);
+    pnt.z += tol * (RANDOM.nextDouble() - 0.5);
   }
 
   /** Returns the coordinates for <code>num</code> randomly
@@ -38,7 +41,7 @@ enum TestHelper {
     double[] coords = new double[num * 3];
     Vector3d pnt = new Vector3d();
     Vector3d base = new Vector3d();
-    TestHelper.setRandom(base, -1, 1, QuickHull3DHelper.RANDOM);
+    TestHelper.setRandom(base, -1, 1, RANDOM);
     double tol = StaticHelper.DOUBLE_PREC;
     if (dimen == 0) {
       for (int i = 0; i < num; i++) {
@@ -50,10 +53,10 @@ enum TestHelper {
       }
     } else if (dimen == 1) {
       Vector3d u = new Vector3d();
-      TestHelper.setRandom(u, -1, 1, QuickHull3DHelper.RANDOM);
+      TestHelper.setRandom(u, -1, 1, RANDOM);
       u.normalize();
       for (int i = 0; i < num; i++) {
-        double a = 2 * (QuickHull3DHelper.RANDOM.nextDouble() - 0.5);
+        double a = 2 * (RANDOM.nextDouble() - 0.5);
         pnt.scale(a, u);
         pnt.add(base);
         randomlyPerturb(pnt, tol);
@@ -64,11 +67,11 @@ enum TestHelper {
     } else // dimen == 2
     {
       Vector3d nrm = new Vector3d();
-      TestHelper.setRandom(nrm, -1, 1, QuickHull3DHelper.RANDOM);
+      TestHelper.setRandom(nrm, -1, 1, RANDOM);
       nrm.normalize();
       for (int i = 0; i < num; i++) { // compute a random point and project it to the plane
         Vector3d perp = new Vector3d();
-        TestHelper.setRandom(pnt, -1, 1, QuickHull3DHelper.RANDOM);
+        TestHelper.setRandom(pnt, -1, 1, RANDOM);
         perp.scale(pnt.dot(nrm), nrm);
         pnt.sub(perp);
         pnt.add(base);
@@ -91,7 +94,7 @@ enum TestHelper {
     double[] coords = new double[num * 3];
     Vector3d pnt = new Vector3d();
     for (int i = 0; i < num;) {
-      TestHelper.setRandom(pnt, -radius, radius, QuickHull3DHelper.RANDOM);
+      TestHelper.setRandom(pnt, -radius, radius, RANDOM);
       if (pnt.norm() <= radius) {
         coords[i * 3 + 0] = pnt.x;
         coords[i * 3 + 1] = pnt.y;
@@ -119,7 +122,7 @@ enum TestHelper {
     double[] coords = new double[num * 3];
     for (int i = 0; i < num; i++) {
       for (int k = 0; k < 3; k++) {
-        double x = 2 * range * (QuickHull3DHelper.RANDOM.nextDouble() - 0.5);
+        double x = 2 * range * (RANDOM.nextDouble() - 0.5);
         if (x > max) {
           x = max;
         } else if (x < -max) {
@@ -131,11 +134,11 @@ enum TestHelper {
     return coords;
   }
 
-  static void shuffleCoords(double[] coords) {
+  private static void shuffleCoords(double[] coords) {
     int num = coords.length / 3;
     for (int i = 0; i < num; i++) {
-      int i1 = QuickHull3DHelper.RANDOM.nextInt(num);
-      int i2 = QuickHull3DHelper.RANDOM.nextInt(num);
+      int i1 = RANDOM.nextInt(num);
+      int i2 = RANDOM.nextInt(num);
       for (int k = 0; k < 3; k++) {
         double tmp = coords[i1 * 3 + k];
         coords[i1 * 3 + k] = coords[i2 * 3 + k];
@@ -174,7 +177,7 @@ enum TestHelper {
     return coords;
   }
 
-  static double[] addDegeneracy(int type, double[] coords, QuickHull3D hull) {
+  public static double[] addDegeneracy(int type, double[] coords, QuickHull3D hull) {
     int numv = coords.length / 3;
     int[][] faces = hull.getFaces();
     double[] coordsx = new double[coords.length + faces.length * 3];
@@ -183,7 +186,7 @@ enum TestHelper {
     double eps = hull.getDistanceTolerance();
     for (int i = 0; i < faces.length; i++) {
       // random point on an edge
-      lam[0] = QuickHull3DHelper.RANDOM.nextDouble();
+      lam[0] = RANDOM.nextDouble();
       lam[1] = 1 - lam[0];
       lam[2] = 0.0;
       if (type == QuickHull3DHelper.VERTEX_DEGENERACY && (i % 2 == 0)) {
@@ -193,7 +196,7 @@ enum TestHelper {
       for (int j = 0; j < 3; j++) {
         int vtxi = faces[i][j];
         for (int k = 0; k < 3; k++) {
-          coordsx[numv * 3 + k] += lam[j] * coords[vtxi * 3 + k] + QuickHull3DHelper.epsScale * eps * (QuickHull3DHelper.RANDOM.nextDouble() - 0.5);
+          coordsx[numv * 3 + k] += lam[j] * coords[vtxi * 3 + k] + epsScale * eps * (RANDOM.nextDouble() - 0.5);
         }
       }
       numv++;
@@ -202,7 +205,7 @@ enum TestHelper {
     return coordsx;
   }
 
-  static void rotateCoords(double[] res, double[] xyz, double roll, double pitch, double yaw) {
+  public static void rotateCoords(double[] res, double[] xyz, double roll, double pitch, double yaw) {
     double sroll = Math.sin(roll);
     double croll = Math.cos(roll);
     double spitch = Math.sin(pitch);
@@ -232,10 +235,11 @@ enum TestHelper {
    * @param lower lower random value (inclusive)
    * @param upper upper random value (exclusive)
    * @param generator random number generator */
-  public static void setRandom(Vector3d v, double lower, double upper, Random generator) {
+  private static void setRandom(Vector3d v, double lower, double upper, Random generator) {
     double range = upper - lower;
     v.x = generator.nextDouble() * range + lower;
     v.y = generator.nextDouble() * range + lower;
     v.z = generator.nextDouble() * range + lower;
   }
+
 }

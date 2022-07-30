@@ -10,8 +10,6 @@
  * software. */
 package ch.alpine.qhull3d;
 
-import java.util.Random;
-
 /** Testing class for QuickHull3D. Running the command
  * <pre>
  * java quickhull3d.QuickHull3DTest
@@ -34,10 +32,8 @@ public class QuickHull3DHelper {
   static final int NO_DEGENERACY = 0;
   static final int EDGE_DEGENERACY = 1;
   static final int VERTEX_DEGENERACY = 2;
-  static final Random RANDOM = new Random(); // random number generator
   static final boolean testRotation = true;
   static final int degeneracyTest = VERTEX_DEGENERACY;
-  static final double epsScale = 2.0;
 
   /** Returns true if two face index sets are equal,
    * modulo a cyclical permuation.
