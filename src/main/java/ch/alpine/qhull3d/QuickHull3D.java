@@ -100,7 +100,6 @@ public class QuickHull3D {
   private final Vertex[] minVtxs = new Vertex[3];
   private final List<Face> faces = new ArrayList<>(16);
   private final List<HalfEdge> horizon = new ArrayList<>(16);
-  private final FaceList newFaces = new FaceList();
   private final VertexList unclaimed = new VertexList();
   private final VertexList claimed = new VertexList();
   /** estimated size of the point set */
@@ -238,7 +237,7 @@ public class QuickHull3D {
    * in <a href=http://www.qhull.org>qhull</a>). */
   public void triangulate() {
     double minArea = 1000 * charLength * StaticHelper.DOUBLE_PREC;
-    newFaces.clear();
+    FaceList newFaces = new FaceList();
     for (Face face : faces)
       if (face.mark == Face.VISIBLE)
         face.triangulate(newFaces, minArea); // splitFace (face);
@@ -632,7 +631,7 @@ public class QuickHull3D {
     }
     removePointFromFace(eyeVtx, eyeVtx.face);
     calculateHorizon(eyeVtx.pnt, null, eyeVtx.face, horizon);
-    newFaces.clear();
+    FaceList newFaces = new FaceList();
     addNewFaces(newFaces, eyeVtx, horizon);
     // first merge pass ... merge faces which are non-convex
     // as determined by the larger face
