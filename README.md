@@ -20,7 +20,7 @@ From time to time, a version is deployed and made available for maven integratio
   <dependency>
     <groupId>ch.alpine</groupId>
     <artifactId>qhull3d</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
   </dependency>
 </dependencies>
 
