@@ -386,7 +386,7 @@ public class QuickHull3D {
     int[][] allFaces = new int[faces.size()][];
     int k = 0;
     for (Face face : faces)
-      allFaces[k++] = face.getFaceIndices();
+      allFaces[k++] = face.getIndices();
     return allFaces;
   }
 

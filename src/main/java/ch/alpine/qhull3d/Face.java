@@ -176,10 +176,6 @@ class Face {
     return he;
   }
 
-  public HalfEdge getFirstEdge() {
-    return he0;
-  }
-
   /** Computes the distance from a point p to the plane of
    * this face.
    *
@@ -322,39 +318,7 @@ class Face {
     return discarded;
   }
 
-  public void triangulate(FaceList newFaces, double minArea) {
-    HalfEdge hedge;
-    if (numVertices() < 4) {
-      return;
-    }
-    Vertex v0 = he0.head();
-    hedge = he0.next();
-    HalfEdge oppPrev = hedge.opposite;
-    Face face0 = null;
-    for (hedge = hedge.next(); hedge != he0.prev(); hedge = hedge.next()) {
-      Face face = createTriangle(v0, hedge.prev().head(), hedge.head(), minArea);
-      face.he0.next().setOpposite(oppPrev);
-      face.he0.prev().setOpposite(hedge.opposite);
-      oppPrev = face.he0;
-      newFaces.add(face);
-      if (face0 == null) {
-        face0 = face;
-      }
-    }
-    hedge = new HalfEdge(he0.prev().prev().head(), this);
-    hedge.setOpposite(oppPrev);
-    hedge.prev(he0);
-    hedge.prev().next(hedge);
-    hedge.next(he0.prev());
-    hedge.next().prev(hedge);
-    computeNormalAndCentroid(minArea);
-    checkConsistency();
-    for (Face face = face0; face != null; face = face.next) {
-      face.checkConsistency();
-    }
-  }
-
-  int[] getFaceIndices() {
+  int[] getIndices() {
     int[] indices = new int[numVertices()];
     HalfEdge hedge = he0;
     int k = 0;
