@@ -10,8 +10,8 @@ class QuickHull3DTest {
   @RepeatedTest(10)
   void testRandom() {
     for (int n = 20; n < 200; n += 10) {
-      QuickHull3DHelper tester = new QuickHull3DHelper();
       double[] coords = TestHelper.randomPoints(n, 1.0);
+      QuickHull3DHelper tester = new QuickHull3DHelper();
       tester.test(coords);
     }
   }
@@ -19,8 +19,8 @@ class QuickHull3DTest {
   @RepeatedTest(10)
   void testSpherical() {
     for (int n = 20; n < 200; n += 10) {
-      QuickHull3DHelper tester = new QuickHull3DHelper();
       double[] coords = TestHelper.randomSphericalPoints(n, 1.0);
+      QuickHull3DHelper tester = new QuickHull3DHelper();
       tester.test(coords);
     }
   }
@@ -28,8 +28,8 @@ class QuickHull3DTest {
   @RepeatedTest(10)
   void testCubed() {
     for (int n = 20; n < 200; n += 10) {
-      QuickHull3DHelper tester = new QuickHull3DHelper();
       double[] coords = TestHelper.randomCubedPoints(n, 1.0, 0.5);
+      QuickHull3DHelper tester = new QuickHull3DHelper();
       tester.test(coords);
     }
   }
@@ -37,8 +37,8 @@ class QuickHull3DTest {
   @RepeatedTest(10)
   void testGrid() {
     for (int n = 2; n <= 10; n++) {
-      QuickHull3DHelper tester = new QuickHull3DHelper();
       double[] coords = TestHelper.randomGridPoints(n, 4.0);
+      QuickHull3DHelper tester = new QuickHull3DHelper();
       tester.test(coords);
     }
   }
