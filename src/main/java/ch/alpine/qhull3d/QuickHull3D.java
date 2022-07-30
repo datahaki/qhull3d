@@ -94,22 +94,21 @@ public class QuickHull3D {
   // ---
   private static final int FIND_INDEX = -1;
   // ---
-  protected final Vertex[] pointBuffer;
-  protected final int[] vertexPointIndices;
+  private final Vertex[] pointBuffer;
+  private final int[] vertexPointIndices;
   private final Vertex[] maxVtxs = new Vertex[3];
   private final Vertex[] minVtxs = new Vertex[3];
-  protected final List<Face> faces = new ArrayList<>(16);
-  protected final List<HalfEdge> horizon = new ArrayList<>(16);
+  private final List<Face> faces = new ArrayList<>(16);
+  private final List<HalfEdge> horizon = new ArrayList<>(16);
   private final FaceList newFaces = new FaceList();
   private final VertexList unclaimed = new VertexList();
   private final VertexList claimed = new VertexList();
   /** estimated size of the point set */
-  protected double charLength;
-  protected boolean debug = false;
-  protected int numVertices;
-  protected int numFaces = 0;
-  protected double explicitTolerance = AUTOMATIC_TOLERANCE;
-  protected double tolerance;
+  private double charLength;
+  private boolean debug = false;
+  private int numVertices;
+  private double explicitTolerance = AUTOMATIC_TOLERANCE;
+  private double tolerance;
 
   /** Constructs the convex hull of a set of points whose
    * coordinates are given by an array of doubles.
@@ -135,7 +134,24 @@ public class QuickHull3D {
       vertex.index = index;
       pointBuffer[index] = vertex;
     }
-    numFaces = 0;
+  }
+
+  public void buildHull() {
+    int cnt = 0;
+    Vertex eyeVtx;
+    computeMaxAndMin();
+    createInitialSimplex();
+    while ((eyeVtx = nextPointToAdd()) != null) {
+      addPointToHull(eyeVtx);
+      cnt++;
+      if (debug) {
+        System.out.println("iteration " + cnt + " done");
+      }
+    }
+    reindexFacesAndVertices();
+    if (debug) {
+      System.out.println("hull done");
+    }
   }
 
   /** Returns true if debugging is enabled.
@@ -640,24 +656,6 @@ public class QuickHull3D {
     resolveUnclaimedPoints(newFaces);
   }
 
-  public void buildHull() {
-    int cnt = 0;
-    Vertex eyeVtx;
-    computeMaxAndMin();
-    createInitialSimplex();
-    while ((eyeVtx = nextPointToAdd()) != null) {
-      addPointToHull(eyeVtx);
-      cnt++;
-      if (debug) {
-        System.out.println("iteration " + cnt + " done");
-      }
-    }
-    reindexFacesAndVertices();
-    if (debug) {
-      System.out.println("hull done");
-    }
-  }
-
   private static void markFaceVertices(Face face, int mark) {
     HalfEdge he0 = face.getFirstEdge();
     HalfEdge he = he0;
@@ -668,19 +666,15 @@ public class QuickHull3D {
   }
 
   private void reindexFacesAndVertices() {
-    for (int i = 0; i < numPoints(); i++) {
-      pointBuffer[i].index = -1;
-    }
+    for (Vertex vertex : pointBuffer)
+      vertex.index = -1;
     // remove inactive faces and mark active vertices
-    numFaces = 0;
     for (Iterator<Face> it = faces.iterator(); it.hasNext();) {
       Face face = it.next();
-      if (face.mark != Face.VISIBLE) {
+      if (face.mark != Face.VISIBLE)
         it.remove();
-      } else {
+      else
         markFaceVertices(face, 0);
-        numFaces++;
-      }
     }
     // reindex vertices
     numVertices = 0;
