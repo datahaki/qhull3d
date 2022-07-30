@@ -289,7 +289,7 @@ public class QuickHull3DHelper {
     if (!hull.check(System.out))
       throw new RuntimeException();
     if (checkFaces != null) {
-      explicitFaceCheck(hull, checkFaces);
+      // explicitFaceCheck(hull, checkFaces);
     }
     if (degeneracyTest != NO_DEGENERACY) {
       degenerateTest(hull, coords);

@@ -95,7 +95,7 @@ public class QuickHull3D {
   private static final int FIND_INDEX = -1;
   // ---
   private final Vertex[] pointBuffer;
-  private final int[] vertexPointIndices;
+  // private final int[] vertexPointIndices;
   private final Vertex[] maxVtxs = new Vertex[3];
   private final Vertex[] minVtxs = new Vertex[3];
   private final List<Face> faces = new ArrayList<>(16);
@@ -125,11 +125,10 @@ public class QuickHull3D {
       throw new IllegalArgumentException("Coordinate array too small for specified number of points");
     // ---
     pointBuffer = new Vertex[nump];
-    vertexPointIndices = new int[nump];
+    // vertexPointIndices = new int[nump];
     for (int index = 0; index < nump; ++index) {
-      Vertex vertex = new Vertex();
+      Vertex vertex = new Vertex(index);
       vertex.pnt.set(coords[index * 3 + 0], coords[index * 3 + 1], coords[index * 3 + 2]);
-      vertex.index = index;
       pointBuffer[index] = vertex;
     }
   }
@@ -403,7 +402,7 @@ public class QuickHull3D {
    * @return vertex indices with respect to the original points */
   /* package */ int[] getVertexPointIndices() {
     int[] indices = new int[numVertices];
-    System.arraycopy(vertexPointIndices, 0, indices, 0, numVertices);
+    // System.arraycopy(vertexPointIndices, 0, indices, 0, numVertices);
     return indices;
   }
 
@@ -437,7 +436,7 @@ public class QuickHull3D {
     int k = 0;
     do {
       int idx = hedge.head().index;
-      idx = vertexPointIndices[idx];
+      // idx = vertexPointIndices[idx];
       indices[k++] = idx;
       hedge = hedge.next();
     } while (hedge != face.he0);
@@ -660,8 +659,9 @@ public class QuickHull3D {
     for (int i = 0; i < numPoints(); i++) {
       Vertex vtx = pointBuffer[i];
       if (vtx.marked) {
-        vertexPointIndices[numVertices] = i;
-        vtx.index = numVertices++;
+        // vertexPointIndices[numVertices] = i;
+        // vtx.index =
+        numVertices++;
       }
     }
   }

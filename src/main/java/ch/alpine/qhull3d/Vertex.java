@@ -16,4 +16,8 @@ class Vertex {
   /** Current face that this vertex is outside of. */
   Face face;
   boolean marked = false;
+
+  public Vertex(int index) {
+    this.index = index;
+  }
 }
