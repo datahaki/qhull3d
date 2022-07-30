@@ -28,43 +28,10 @@ import java.util.List;
  * href=http://www.qhull.org>qhull</a>.
  *
  * <p>A hull is constructed by providing a set of points
- * to either a constructor or a
- * build method. After
- * the hull is built, its vertices and faces can be retrieved
- * using {@link #getVertices()
- * getVertices} and {@link #getFaces() getFaces}.
- * A typical usage might look like this:
- * <pre>
- * // x y z coordinates of 6 points
- * Point3d[] points = new Point3d[]
- * { new Point3d (0.0, 0.0, 0.0),
- * new Point3d (1.0, 0.5, 0.0),
- * new Point3d (2.0, 0.0, 0.0),
- * new Point3d (0.5, 0.5, 0.5),
- * new Point3d (0.0, 0.0, 2.0),
- * new Point3d (0.1, 0.2, 0.3),
- * new Point3d (0.0, 2.0, 0.0),
- * };
- *
- * QuickHull3D hull = new QuickHull3D();
- * hull.build (points);
- *
- * System.out.println ("Vertices:");
- * Point3d[] vertices = hull.getVertices();
- * for (int i = 0; i < vertices.length; i++)
- * { Point3d pnt = vertices[i];
- * System.out.println (pnt.x + " " + pnt.y + " " + pnt.z);
- * }
- *
- * System.out.println ("Faces:");
- * int[][] faceIndices = hull.getFaces();
- * for (int i = 0; i < faceIndices.length; i++)
- * { for (int k = 0; k < faceIndices[i].length; k++)
- * { System.out.print (faceIndices[i][k] + " ");
- * }
- * System.out.println ("");
- * }
- * </pre>
+ * to the {@link #build(double[])} method.
+ * After the hull is built, its faces can be retrieved
+ * using {@link #getFaces() getFaces}.
+ * 
  * As a convenience, there are also {@link #build(double[]) build}
  * and getVertex methods which
  * pass point information using an array of doubles.
@@ -455,16 +422,6 @@ public class QuickHull3D {
     }
   }
 
-  /** Returns the vertex points in this hull.
-   *
-   * @return array of vertex points */
-  public Vector3d[] getVertices() {
-    Vector3d[] vtxs = new Vector3d[numVertices];
-    for (int i = 0; i < numVertices; i++)
-      vtxs[i] = pointBuffer[vertexPointIndices[i]].pnt;
-    return vtxs;
-  }
-
   /** Returns an array specifing the index of each hull vertex
    * with respect to the original input points.
    *
@@ -488,8 +445,7 @@ public class QuickHull3D {
    * @param indexFlags specifies index characteristics (0 results
    * in the default)
    * @return array of integer arrays, giving the vertex
-   * indices for each face.
-   * @see QuickHull3D#getVertices() */
+   * indices for each face. */
   public int[][] getFaces(int indexFlags) {
     int[][] allFaces = new int[faces.size()][];
     int k = 0;
