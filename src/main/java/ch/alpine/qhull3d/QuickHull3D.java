@@ -588,8 +588,8 @@ public class QuickHull3D {
     return face.getEdge(0);
   }
 
-  private void addNewFaces(FaceList newFaces, Vertex eyeVtx, List<HalfEdge> horizon) {
-    newFaces.clear();
+  private FaceList addNewFaces(Vertex eyeVtx, List<HalfEdge> horizon) {
+    FaceList newFaces = new FaceList();
     HalfEdge hedgeSidePrev = null;
     HalfEdge hedgeSideBegin = null;
     for (HalfEdge horizonHe : horizon) {
@@ -606,6 +606,7 @@ public class QuickHull3D {
       hedgeSidePrev = hedgeSide;
     }
     hedgeSideBegin.next().setOpposite(hedgeSidePrev);
+    return newFaces;
   }
 
   private Vertex nextPointToAdd() {
@@ -631,8 +632,7 @@ public class QuickHull3D {
     }
     removePointFromFace(eyeVtx, eyeVtx.face);
     calculateHorizon(eyeVtx.pnt, null, eyeVtx.face, horizon);
-    FaceList newFaces = new FaceList();
-    addNewFaces(newFaces, eyeVtx, horizon);
+    FaceList newFaces = addNewFaces(eyeVtx, horizon);
     // first merge pass ... merge faces which are non-convex
     // as determined by the larger face
     for (Face face = newFaces.head(); face != null; face = face.next)
