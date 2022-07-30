@@ -32,10 +32,6 @@ import java.util.List;
  * After the hull is built, its faces can be retrieved
  * using {@link #getFaces()}
  * 
- * As a convenience, there are also {@link #build(double[]) build}
- * and getVertex methods which
- * pass point information using an array of doubles.
- *
  * <h3><a name=distTol>Robustness</h3> Because this algorithm uses floating
  * point arithmetic, it is potentially vulnerable to errors arising from
  * numerical imprecision. We address this problem in the same way as <a
@@ -101,7 +97,6 @@ public class QuickHull3D {
   /** estimated size of the point set */
   private double charLength;
   private boolean debug = false;
-  private int numVertices;
   private double explicitTolerance = AUTOMATIC_TOLERANCE;
   private double tolerance;
 
@@ -621,13 +616,6 @@ public class QuickHull3D {
       else
         markFaceVertices(face);
     }
-    // reindex vertices
-    numVertices = 0;
-    for (int i = 0; i < numPoints(); i++) {
-      Vertex vtx = pointBuffer[i];
-      if (vtx.marked)
-        ++numVertices;
-    }
   }
 
   private static void markFaceVertices(Face face) {
@@ -674,11 +662,7 @@ public class QuickHull3D {
     return true;
   }
 
-  /** check edge convexity
-   * 
-   * @param tol
-   * @param ps
-   * @return */
+
   private boolean checkFaces(double tol, PrintStream ps) {
     for (Face face : faces)
       if (face.mark == Face.VISIBLE)

@@ -17,7 +17,7 @@ package ch.alpine.qhull3d;
  * @author John E. Lloyd, Fall 2004 */
 class HalfEdge {
   /** The vertex associated with the head of this half-edge. */
-  private Vertex vertex;
+  private final Vertex vertex;
   /** Next half-edge in the triangle. */
   private HalfEdge next;
   /** Previous half-edge in the triangle. */

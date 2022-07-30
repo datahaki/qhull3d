@@ -247,7 +247,7 @@ public class QuickHull3DHelper {
 
   int cnt = 0;
 
-  void singleTest(double[] coords, int[][] checkFaces) throws Exception {
+  void singleTest(double[] coords, int[][] checkFaces) {
     QuickHull3D hull = new QuickHull3D(coords);
     hull.setDebug(debugEnable);
     hull.buildHull();
