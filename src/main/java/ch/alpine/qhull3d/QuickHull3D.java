@@ -637,8 +637,7 @@ public class QuickHull3D {
         while (doAdjacentMerge(face, NONCONVEX_WRT_LARGER_FACE)) {
           // ---
         }
-    // second merge pass ... merge faces which are non-convex
-    // wrt either face
+    // second merge pass ... merge faces which are non-convex wrt either face
     for (Face face = newFaces.head(); face != null; face = face.next)
       if (face.mark == Face.NON_CONVEX) {
         face.mark = Face.VISIBLE;
@@ -650,8 +649,6 @@ public class QuickHull3D {
   }
 
   private void reindexFacesAndVertices() {
-    for (Vertex vertex : pointBuffer)
-      vertex.index = -1;
     // remove inactive faces and mark active vertices
     for (Iterator<Face> it = faces.iterator(); it.hasNext();) {
       Face face = it.next();
