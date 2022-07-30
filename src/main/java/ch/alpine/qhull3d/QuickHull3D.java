@@ -442,25 +442,21 @@ public class QuickHull3D {
     }
   }
 
-  private static final int NONCONVEX_WRT_LARGER_FACE = 1;
-  private static final int NONCONVEX = 2;
-
   private static double oppFaceDistance(HalfEdge he) {
     return he.face.distanceToPlane(he.opposite.face.getCentroid());
   }
 
-  private boolean doAdjacentMerge(Face face, int mergeType) {
+  private boolean doAdjacentMerge(Face face, MergeType mergeType) {
     HalfEdge hedge = face.he0;
     boolean convex = true;
     do {
       Face oppFace = hedge.oppositeFace();
       boolean merge = false;
-      if (mergeType == NONCONVEX) { // then merge faces if they are definitively non-convex
+      if (mergeType.equals(MergeType.NONCONVEX)) { // then merge faces if they are definitively non-convex
         if (oppFaceDistance(hedge) > -tolerance || oppFaceDistance(hedge.opposite) > -tolerance) {
           merge = true;
         }
-      } else {
-        // mergeType == NONCONVEX_WRT_LARGER_FACE
+      } else { // NONCONVEX_WRT_LARGER_FACE
         // merge faces if they are parallel or non-convex
         // wrt to the larger face; otherwise, just mark
         // the face non-convex for the second pass.
@@ -580,14 +576,14 @@ public class QuickHull3D {
     // as determined by the larger face
     for (Face face = newFaces.head(); face != null; face = face.next)
       if (face.mark == Face.VISIBLE)
-        while (doAdjacentMerge(face, NONCONVEX_WRT_LARGER_FACE)) {
+        while (doAdjacentMerge(face, MergeType.NONCONVEX_WRT_LARGER_FACE)) {
           // ---
         }
     // second merge pass ... merge faces which are non-convex wrt either face
     for (Face face = newFaces.head(); face != null; face = face.next)
       if (face.mark == Face.NON_CONVEX) {
         face.mark = Face.VISIBLE;
-        while (doAdjacentMerge(face, NONCONVEX)) {
+        while (doAdjacentMerge(face, MergeType.NONCONVEX)) {
           // ---
         }
       }
