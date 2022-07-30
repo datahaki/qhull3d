@@ -99,7 +99,6 @@ public class QuickHull3D {
   private final Vertex[] maxVtxs = new Vertex[3];
   private final Vertex[] minVtxs = new Vertex[3];
   private final List<Face> faces = new ArrayList<>(16);
-  private final List<HalfEdge> horizon = new ArrayList<>(16);
   private final VertexList unclaimed = new VertexList();
   private final VertexList claimed = new VertexList();
   /** estimated size of the point set */
@@ -624,7 +623,7 @@ public class QuickHull3D {
   }
 
   private void addPointToHull(Vertex eyeVtx) {
-    horizon.clear();
+    List<HalfEdge> horizon = new ArrayList<>(16);
     unclaimed.clear();
     if (debug) {
       System.out.println("Adding point: " + eyeVtx.index);
