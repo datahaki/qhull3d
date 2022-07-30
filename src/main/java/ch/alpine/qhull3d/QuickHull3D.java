@@ -129,12 +129,7 @@ public class QuickHull3D {
   public static final double AUTOMATIC_TOLERANCE = -1;
   // ---
   private static final int FIND_INDEX = -1;
-  // estimated size of the point set
-  protected double charLength;
-  protected boolean debug = false;
-  protected Vertex[] pointBuffer = new Vertex[0];
-  protected int[] vertexPointIndices = new int[0];
-  private final Face[] discardedFaces = new Face[3];
+  // ---
   private final Vertex[] maxVtxs = new Vertex[3];
   private final Vertex[] minVtxs = new Vertex[3];
   protected final List<Face> faces = new ArrayList<>(16);
@@ -142,6 +137,11 @@ public class QuickHull3D {
   private final FaceList newFaces = new FaceList();
   private final VertexList unclaimed = new VertexList();
   private final VertexList claimed = new VertexList();
+  /** estimated size of the point set */
+  protected double charLength;
+  protected boolean debug = false;
+  protected Vertex[] pointBuffer = new Vertex[0];
+  protected int[] vertexPointIndices = new int[0];
   protected int numVertices;
   protected int numFaces;
   protected int numPoints;
@@ -610,10 +610,8 @@ public class QuickHull3D {
         if (debug) {
           System.out.println("  merging " + face.getVertexString() + "  and  " + oppFace.getVertexString());
         }
-        int numd = face.mergeAdjacentFace(hedge, discardedFaces);
-        for (int i = 0; i < numd; i++) {
-          deleteFacePoints(discardedFaces[i], face);
-        }
+        for (Face discardedFace : face.mergeAdjacentFace(hedge))
+          deleteFacePoints(discardedFace, face);
         if (debug) {
           System.out.println("  result: " + face.getVertexString());
         }
@@ -668,8 +666,7 @@ public class QuickHull3D {
     newFaces.clear();
     HalfEdge hedgeSidePrev = null;
     HalfEdge hedgeSideBegin = null;
-    for (HalfEdge o : horizon) {
-      HalfEdge horizonHe = o;
+    for (HalfEdge horizonHe : horizon) {
       HalfEdge hedgeSide = addAdjoiningFace(eyeVtx, horizonHe);
       if (debug) {
         System.out.println("new face: " + hedgeSide.face.getVertexString());

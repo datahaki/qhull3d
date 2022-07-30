@@ -11,6 +11,9 @@
  * software. */
 package ch.alpine.qhull3d;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /** Basic triangular face used to form the hull.
  *
  * <p>The information stored for each face consists of a planar
@@ -286,10 +289,10 @@ class Face {
     }
   }
 
-  public int mergeAdjacentFace(HalfEdge hedgeAdj, Face[] discarded) {
+  public List<Face> mergeAdjacentFace(HalfEdge hedgeAdj) {
+    List<Face> discarded = new ArrayList<>(3);
     Face oppFace = hedgeAdj.oppositeFace();
-    int numDiscarded = 0;
-    discarded[numDiscarded++] = oppFace;
+    discarded.add(oppFace);
     oppFace.mark = DELETED;
     HalfEdge hedgeOpp = hedgeAdj.getOpposite();
     HalfEdge hedgeAdjPrev = hedgeAdj.prev;
@@ -314,17 +317,16 @@ class Face {
     // handle the half edges at the head
     Face discardedFace;
     discardedFace = connectHalfEdges(hedgeOppPrev, hedgeAdjNext);
-    if (discardedFace != null) {
-      discarded[numDiscarded++] = discardedFace;
-    }
+    if (discardedFace != null)
+      discarded.add(discardedFace);
     // handle the half edges at the tail
     discardedFace = connectHalfEdges(hedgeAdjPrev, hedgeOppNext);
-    if (discardedFace != null) {
-      discarded[numDiscarded++] = discardedFace;
-    }
+    if (discardedFace != null)
+      discarded.add(discardedFace);
     computeNormalAndCentroid();
     checkConsistency();
-    return numDiscarded;
+    // return numDiscarded;
+    return discarded;
   }
 
   public void triangulate(FaceList newFaces, double minArea) {
