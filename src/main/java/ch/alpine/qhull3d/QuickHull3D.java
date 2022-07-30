@@ -95,7 +95,6 @@ public class QuickHull3D {
   private static final int FIND_INDEX = -1;
   // ---
   private final Vertex[] pointBuffer;
-  // private final int[] vertexPointIndices;
   private final Vertex[] maxVtxs = new Vertex[3];
   private final Vertex[] minVtxs = new Vertex[3];
   private final List<Face> faces = new ArrayList<>(16);
@@ -125,7 +124,6 @@ public class QuickHull3D {
       throw new IllegalArgumentException("Coordinate array too small for specified number of points");
     // ---
     pointBuffer = new Vertex[nump];
-    // vertexPointIndices = new int[nump];
     for (int index = 0; index < nump; ++index) {
       Vertex vertex = new Vertex(index);
       vertex.pnt.set(coords[index * 3 + 0], coords[index * 3 + 1], coords[index * 3 + 2]);
@@ -425,21 +423,10 @@ public class QuickHull3D {
     int k = 0;
     for (Face face : faces) {
       allFaces[k] = new int[face.numVertices()];
-      getFaceIndices(allFaces[k], face);
+      Face.getFaceIndices(allFaces[k], face);
       k++;
     }
     return allFaces;
-  }
-
-  private void getFaceIndices(int[] indices, Face face) {
-    HalfEdge hedge = face.he0;
-    int k = 0;
-    do {
-      int idx = hedge.head().index;
-      // idx = vertexPointIndices[idx];
-      indices[k++] = idx;
-      hedge = hedge.next();
-    } while (hedge != face.he0);
   }
 
   private void resolveUnclaimedPoints(FaceList newFaces) {

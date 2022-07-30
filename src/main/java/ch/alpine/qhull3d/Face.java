@@ -354,4 +354,13 @@ class Face {
       face.checkConsistency();
     }
   }
+
+  static void getFaceIndices(int[] indices, Face face) {
+    HalfEdge hedge = face.he0;
+    int k = 0;
+    do {
+      indices[k++] = hedge.head().index;
+      hedge = hedge.next();
+    } while (hedge != face.he0);
+  }
 }
