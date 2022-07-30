@@ -757,28 +757,7 @@ public class QuickHull3D {
    * @return true if the hull is valid
    * @see QuickHull3D#check(PrintStream,double) */
   public boolean check(PrintStream ps) {
-    return check(ps, getDistanceTolerance());
-  }
-
-  /** Checks the correctness of the hull. This is done by making sure that
-   * no faces are non-convex and that no points are outside any face.
-   * These tests are performed using the distance tolerance <i>tol</i>.
-   * Faces are considered non-convex if any edge is non-convex, and an
-   * edge is non-convex if the centroid of either adjoining face is more
-   * than <i>tol</i> above the plane of the other face. Similarly,
-   * a point is considered outside a face if its distance to that face's
-   * plane is more than 10 times <i>tol</i>.
-   *
-   * <p>If the hull has been {@link #triangulate triangulated},
-   * then this routine may fail if some of the resulting
-   * triangles are very small or thin.
-   *
-   * @param ps print stream for diagnostic messages; may be
-   * set to <code>null</code> if no messages are desired.
-   * @param tol distance tolerance
-   * @return true if the hull is valid
-   * @see QuickHull3D#check(PrintStream) */
-  public boolean check(PrintStream ps, double tol) {
+    double tol = getDistanceTolerance();
     // check to make sure all edges are fully connected
     // and that the edges are convex
     double dist;

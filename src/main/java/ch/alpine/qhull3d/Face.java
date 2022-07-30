@@ -190,13 +190,6 @@ class Face {
     return normal.x * p.x + normal.y * p.y + normal.z * p.z - planeOffset;
   }
 
-  /** Returns the normal of the plane associated with this face.
-   *
-   * @return the planar normal */
-  public Vector3d getNormal() {
-    return normal;
-  }
-
   public Vector3d getCentroid() {
     return centroid;
   }
