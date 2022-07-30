@@ -29,7 +29,6 @@ import java.util.Random;
  * @author John E. Lloyd, Fall 2004 */
 public class QuickHull3DHelper {
   static private final double DOUBLE_PREC = 2.2204460492503131e-16;
-  static final boolean triangulate = false;
   static boolean doTesting = true;
   static boolean doTiming = false;
   static final boolean debugEnable = false;
@@ -251,9 +250,6 @@ public class QuickHull3DHelper {
     QuickHull3D hull = new QuickHull3D(coords);
     hull.setDebug(debugEnable);
     hull.buildHull();
-    if (triangulate) {
-      hull.triangulate();
-    }
     if (!hull.check(System.out))
       throw new RuntimeException();
     if (checkFaces != null) {
@@ -298,9 +294,6 @@ public class QuickHull3DHelper {
     xhull.setDebug(debugEnable);
     try {
       xhull.buildHull();
-      if (triangulate) {
-        xhull.triangulate();
-      }
     } catch (Exception e) {
       for (int i = 0; i < coordsx.length / 3; i++) {
         System.out.println(coordsx[i * 3 + 0] + ", " + coordsx[i * 3 + 1] + ", " + coordsx[i * 3 + 2] + ", ");

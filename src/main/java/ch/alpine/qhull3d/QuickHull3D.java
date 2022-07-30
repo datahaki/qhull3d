@@ -218,21 +218,6 @@ public class QuickHull3D {
     return null;
   }
 
-  /** Triangulates any non-triangular hull faces. In some cases, due to
-   * precision issues, the resulting triangles may be very thin or small,
-   * and hence appear to be non-convex (this same limitation is present
-   * in <a href=http://www.qhull.org>qhull</a>). */
-  public void triangulate() {
-    double minArea = 1000 * charLength * StaticHelper.DOUBLE_PREC;
-    FaceList newFaces = new FaceList();
-    for (Face face : faces)
-      if (face.mark == Face.VISIBLE)
-        face.triangulate(newFaces, minArea); // splitFace (face);
-    for (Face face = newFaces.head(); face != null; face = face.next) {
-      faces.add(face);
-    }
-  }
-
   private void computeMaxAndMin() {
     Vector3d max = new Vector3d();
     Vector3d min = new Vector3d();

@@ -19,7 +19,7 @@ class QhullTest {
       }
       // hull = new QuickHull3D ();
       hull.buildHull();
-      hull.triangulate();
+      // hull.triangulate();
       if (!hull.check(System.out)) {
         System.out.println("failed for QuickHull3D triangulated");
       }
