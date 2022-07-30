@@ -54,13 +54,12 @@ class Face {
   }
 
   // ---
-  HalfEdge he0;
   private final Vector3d normal;
-  double area;
   private final Vector3d centroid;
-  double planeOffset;
-  int index;
-  int numVerts;
+  HalfEdge he0;
+  double area;
+  private double planeOffset;
+  private int numVerts;
   Face next;
   int mark;
   Vertex outside;

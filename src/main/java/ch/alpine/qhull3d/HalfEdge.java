@@ -17,13 +17,13 @@ package ch.alpine.qhull3d;
  * @author John E. Lloyd, Fall 2004 */
 class HalfEdge {
   /** The vertex associated with the head of this half-edge. */
-  Vertex vertex;
-  /** Triangular face associated with this half-edge. */
-  Face face;
+  private Vertex vertex;
   /** Next half-edge in the triangle. */
   private HalfEdge next;
   /** Previous half-edge in the triangle. */
   private HalfEdge prev;
+  /** Triangular face associated with this half-edge. */
+  Face face;
   /** Half-edge associated with the opposite triangle
    * adjacent to this edge. */
   HalfEdge opposite;
