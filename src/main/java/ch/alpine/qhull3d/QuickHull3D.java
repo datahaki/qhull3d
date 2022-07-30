@@ -406,13 +406,9 @@ public class QuickHull3D {
 
   /** Returns the faces associated with this hull.
    *
-   * <p>Each face is represented by an integer array which gives the
-   * indices of the vertices. By default, these indices are numbered with
-   * respect to the hull vertices (as opposed to the input points), are
-   * zero-based, and are arranged counter-clockwise. However, this
-   * can be changed by setting {@link #POINT_RELATIVE
-   * POINT_RELATIVE}, INDEXED_FROM_ONE, or
-   * {@link #CLOCKWISE CLOCKWISE} in the indexFlags parameter.
+   * <p>Each face is represented by an integer array which gives the indices of
+   * the vertices. By default, these indices are numbered with respect to the
+   * input points, are zero-based, and are arranged counter-clockwise.
    *
    * @param indexFlags specifies index characteristics (0 results
    * in the default)
@@ -421,11 +417,8 @@ public class QuickHull3D {
   public int[][] getFaces() {
     int[][] allFaces = new int[faces.size()][];
     int k = 0;
-    for (Face face : faces) {
-      allFaces[k] = new int[face.numVertices()];
-      Face.getFaceIndices(allFaces[k], face);
-      k++;
-    }
+    for (Face face : faces)
+      allFaces[k++] = face.getFaceIndices();
     return allFaces;
   }
 

@@ -194,7 +194,7 @@ class Face {
     return centroid;
   }
 
-  public int numVertices() {
+  private int numVertices() {
     return numVerts;
   }
 
@@ -355,12 +355,14 @@ class Face {
     }
   }
 
-  static void getFaceIndices(int[] indices, Face face) {
-    HalfEdge hedge = face.he0;
+  int[] getFaceIndices() {
+    int[] indices = new int[numVertices()];
+    HalfEdge hedge = he0;
     int k = 0;
     do {
       indices[k++] = hedge.head().index;
       hedge = hedge.next();
-    } while (hedge != face.he0);
+    } while (hedge != he0);
+    return indices;
   }
 }
