@@ -28,9 +28,9 @@ import java.util.List;
  * href=http://www.qhull.org>qhull</a>.
  *
  * <p>A hull is constructed by providing a set of points
- * to the {@link #build(double[])} method.
+ * to the {@link #buildHull()} method.
  * After the hull is built, its faces can be retrieved
- * using {@link #getFaces() getFaces}.
+ * using {@link #getFaces(int)}
  * 
  * As a convenience, there are also {@link #build(double[]) build}
  * and getVertex methods which
@@ -142,14 +142,12 @@ public class QuickHull3D {
       Vertex eyeVtx = nextPointToAdd();
       addPointToHull(eyeVtx);
       cnt++;
-      if (debug) {
+      if (debug)
         System.out.println("iteration " + cnt + " done");
-      }
     }
     reindexFacesAndVertices();
-    if (debug) {
+    if (debug)
       System.out.println("hull done");
-    }
   }
 
   /** Returns true if debugging is enabled.
@@ -651,15 +649,6 @@ public class QuickHull3D {
     resolveUnclaimedPoints(newFaces);
   }
 
-  private static void markFaceVertices(Face face, int mark) {
-    HalfEdge he0 = face.getFirstEdge();
-    HalfEdge he = he0;
-    do {
-      he.head().index = mark;
-      he = he.next();
-    } while (he != he0);
-  }
-
   private void reindexFacesAndVertices() {
     for (Vertex vertex : pointBuffer)
       vertex.index = -1;
@@ -680,6 +669,19 @@ public class QuickHull3D {
         vtx.index = numVertices++;
       }
     }
+  }
+
+  private static void markFaceVertices(Face face, int mark) {
+    HalfEdge he0 = face.getFirstEdge();
+    HalfEdge he = he0;
+    do {
+      he.head().index = mark;
+      he = he.next();
+    } while (he != he0);
+  }
+
+  private int numPoints() {
+    return pointBuffer.length;
   }
 
   private static boolean checkFaceConvexity(Face face, double tol, PrintStream ps) {
@@ -726,10 +728,6 @@ public class QuickHull3D {
     return true;
   }
 
-  private int numPoints() {
-    return pointBuffer.length;
-  }
-
   /** Checks the correctness of the hull using the distance tolerance
    * returned by {@link QuickHull3D#getDistanceTolerance
    * getDistanceTolerance}; see
@@ -746,22 +744,19 @@ public class QuickHull3D {
     // and that the edges are convex
     double dist;
     double pointTol = 10 * tol;
-    if (!checkFaces(tolerance, ps)) {
+    if (!checkFaces(tolerance, ps))
       return false;
-    }
     // check point inclusion
-    for (int i = 0; i < numPoints(); i++) {
-      Vector3d pnt = pointBuffer[i].pnt;
+    for (Vertex vertex : pointBuffer)
       for (Face face : faces)
         if (face.mark == Face.VISIBLE) {
-          dist = face.distanceToPlane(pnt);
+          dist = face.distanceToPlane(vertex.pnt);
           if (dist > pointTol) {
             if (ps != null)
-              ps.println("Point " + i + " " + dist + " above face " + face.getVertexString());
+              ps.println("Point " + vertex.pnt + " " + dist + " above face " + face.getVertexString());
             return false;
           }
         }
-    }
     return true;
   }
 }
