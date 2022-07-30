@@ -121,7 +121,7 @@ public class QuickHull3D {
    * @throws IllegalArgumentException the number of input points is less
    * than four, or the points appear to be coincident, colinear, or
    * coplanar. */
-  public void build(double[] coords) throws IllegalArgumentException {
+  public QuickHull3D(double[] coords) throws IllegalArgumentException {
     int nump = coords.length / 3;
     if (nump < 4)
       throw new IllegalArgumentException("Less than four input points specified");
@@ -129,7 +129,6 @@ public class QuickHull3D {
       throw new IllegalArgumentException("Coordinate array too small for specified number of points");
     // ---
     initBuffers(coords, nump);
-    buildHull();
   }
 
   private void initBuffers(double[] coords, int nump) {
@@ -649,7 +648,7 @@ public class QuickHull3D {
     resolveUnclaimedPoints(newFaces);
   }
 
-  private void buildHull() {
+  public void buildHull() {
     int cnt = 0;
     Vertex eyeVtx;
     computeMaxAndMin();

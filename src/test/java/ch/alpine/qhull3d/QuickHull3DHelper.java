@@ -280,9 +280,9 @@ public class QuickHull3DHelper {
   int cnt = 0;
 
   void singleTest(double[] coords, int[][] checkFaces) throws Exception {
-    QuickHull3D hull = new QuickHull3D();
+    QuickHull3D hull = new QuickHull3D(coords);
     hull.setDebug(debugEnable);
-    hull.build(coords);
+    hull.buildHull();
     if (triangulate) {
       hull.triangulate();
     }
@@ -326,10 +326,10 @@ public class QuickHull3DHelper {
 
   void degenerateTest(QuickHull3D hull, double[] coords) {
     double[] coordsx = addDegeneracy(degeneracyTest, coords, hull);
-    QuickHull3D xhull = new QuickHull3D();
+    QuickHull3D xhull = new QuickHull3D(coords);
     xhull.setDebug(debugEnable);
     try {
-      xhull.build(coordsx);
+      xhull.buildHull();
       if (triangulate) {
         xhull.triangulate();
       }
@@ -373,10 +373,10 @@ public class QuickHull3DHelper {
   }
 
   void testException(double[] coords, String msg) {
-    QuickHull3D hull = new QuickHull3D();
+    QuickHull3D hull = new QuickHull3D(coords);
     Exception ex = null;
     try {
-      hull.build(coords);
+      hull.buildHull();
     } catch (Exception e) {
       ex = e;
     }
@@ -472,11 +472,12 @@ public class QuickHull3DHelper {
   public void timingTests() {
     long t0, t1;
     int n = 10;
-    QuickHull3D hull = new QuickHull3D();
+    
     System.out.println("warming up ... ");
     for (int i = 0; i < 2; i++) {
       double[] coords = randomSphericalPoints(10000, 1.0);
-      hull.build(coords);
+      QuickHull3D hull = new QuickHull3D(coords);
+      hull.buildHull();
     }
     int cnt = 10;
     for (int i = 0; i < 4; i++) {
@@ -484,7 +485,8 @@ public class QuickHull3DHelper {
       double[] coords = randomSphericalPoints(n, 1.0);
       t0 = System.currentTimeMillis();
       for (int k = 0; k < cnt; k++) {
-        hull.build(coords);
+        QuickHull3D hull = new QuickHull3D(coords);
+        hull.buildHull();
       }
       t1 = System.currentTimeMillis();
       System.out.println(n + " points: " + (t1 - t0) / (double) cnt + " msec");

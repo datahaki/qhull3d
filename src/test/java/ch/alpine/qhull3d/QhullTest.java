@@ -6,9 +6,9 @@ class QhullTest {
   @Test
   void testSimple() {
     QuickHull3DHelper tester = new QuickHull3DHelper();
-    QuickHull3D hull = new QuickHull3D();
     for (int i = 0; i < 100; i++) {
       double[] pnts = tester.randomCubedPoints(100, 1.0, 0.5);
+      QuickHull3D hull = new QuickHull3D(pnts);
       // hull.setFromQhull(pnts, pnts.length / 3, /* triangulated= */false);
       pnts = tester.addDegeneracy(QuickHull3DHelper.VERTEX_DEGENERACY, pnts, hull);
       if (!hull.check(System.out)) {
@@ -18,13 +18,13 @@ class QhullTest {
         System.out.println("failed for qhull regular");
       }
       // hull = new QuickHull3D ();
-      hull.build(pnts);
+      hull.buildHull();
       hull.triangulate();
       if (!hull.check(System.out)) {
         System.out.println("failed for QuickHull3D triangulated");
       }
       // hull = new QuickHull3D ();
-      hull.build(pnts);
+      hull.buildHull();
       if (!hull.check(System.out)) {
         System.out.println("failed for QuickHull3D regular");
       }

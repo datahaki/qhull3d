@@ -21,8 +21,8 @@ class SimpleTest {
         0.0, 0.0, 2.0, //
         0.1, 0.2, 0.3, //
         0.0, 2.0, 0.0, };
-    QuickHull3D hull = new QuickHull3D();
-    hull.build(points);
+    QuickHull3D hull = new QuickHull3D(points);
+    hull.buildHull();
     int[][] faceIndices = hull.getFaces(QuickHull3D.POINT_RELATIVE);
     assertArrayEquals(faceIndices[0], new int[] { 2, 4, 0 });
     assertArrayEquals(faceIndices[1], new int[] { 6, 2, 0 });
