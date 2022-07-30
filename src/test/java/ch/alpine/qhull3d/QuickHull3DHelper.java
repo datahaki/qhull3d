@@ -246,7 +246,7 @@ public class QuickHull3DHelper {
   }
 
   void explicitFaceCheck(QuickHull3D hull, int[][] checkFaces) throws Exception {
-    int[][] faceIndices = hull.getFaces(0);
+    int[][] faceIndices = hull.getFaces();
     if (faceIndices.length != checkFaces.length) {
       throw new Exception("Error: " + faceIndices.length + " faces vs. " + checkFaces.length);
     }
@@ -298,7 +298,7 @@ public class QuickHull3DHelper {
 
   double[] addDegeneracy(int type, double[] coords, QuickHull3D hull) {
     int numv = coords.length / 3;
-    int[][] faces = hull.getFaces(0);
+    int[][] faces = hull.getFaces();
     double[] coordsx = new double[coords.length + faces.length * 3];
     System.arraycopy(coords, 0, coordsx, 0, coords.length);
     double[] lam = new double[3];

@@ -30,7 +30,7 @@ import java.util.List;
  * <p>A hull is constructed by providing a set of points
  * to the {@link #buildHull()} method.
  * After the hull is built, its faces can be retrieved
- * using {@link #getFaces(int)}
+ * using {@link #getFaces()}
  * 
  * As a convenience, there are also {@link #build(double[]) build}
  * and getVertex methods which
@@ -421,25 +421,23 @@ public class QuickHull3D {
    * in the default)
    * @return array of integer arrays, giving the vertex
    * indices for each face. */
-  public int[][] getFaces(int indexFlags) {
+  public int[][] getFaces() {
     int[][] allFaces = new int[faces.size()][];
     int k = 0;
     for (Face face : faces) {
       allFaces[k] = new int[face.numVertices()];
-      getFaceIndices(allFaces[k], face, indexFlags);
+      getFaceIndices(allFaces[k], face);
       k++;
     }
     return allFaces;
   }
 
-  private void getFaceIndices(int[] indices, Face face, int flags) {
-    boolean pointRelative = (flags & POINT_RELATIVE) != 0;
+  private void getFaceIndices(int[] indices, Face face) {
     HalfEdge hedge = face.he0;
     int k = 0;
     do {
       int idx = hedge.head().index;
-      if (pointRelative)
-        idx = vertexPointIndices[idx];
+      idx = vertexPointIndices[idx];
       indices[k++] = idx;
       hedge = hedge.next();
     } while (hedge != face.he0);
