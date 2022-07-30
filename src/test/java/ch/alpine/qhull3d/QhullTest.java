@@ -7,10 +7,10 @@ class QhullTest {
   void testSimple() {
     QuickHull3DHelper tester = new QuickHull3DHelper();
     for (int i = 0; i < 100; i++) {
-      double[] pnts = tester.randomCubedPoints(100, 1.0, 0.5);
+      double[] pnts = TestHelper.randomCubedPoints(100, 1.0, 0.5);
       QuickHull3D hull = new QuickHull3D(pnts);
       // hull.buildHull();
-      pnts = tester.addDegeneracy(QuickHull3DHelper.VERTEX_DEGENERACY, pnts, hull);
+      pnts = TestHelper.addDegeneracy(QuickHull3DHelper.VERTEX_DEGENERACY, pnts, hull);
       if (!hull.check(System.out)) {
         System.out.println("failed for qhull triangulated");
       }

@@ -41,7 +41,7 @@ class QuickHull3DTest {
     for (int n = 20; n < 200; n += 10) { // System.out.println (n);
       for (int i = 0; i < 10; i++) {
         QuickHull3DHelper tester = new QuickHull3DHelper();
-        double[] coords = tester.randomPoints(n, 1.0);
+        double[] coords = TestHelper.randomPoints(n, 1.0);
         tester.test(coords, null);
       }
     }
@@ -53,7 +53,7 @@ class QuickHull3DTest {
     for (int n = 20; n < 200; n += 10) { // System.out.println (n);
       for (int i = 0; i < 10; i++) {
         QuickHull3DHelper tester = new QuickHull3DHelper();
-        double[] coords = QuickHull3DHelper.randomSphericalPoints(n, 1.0);
+        double[] coords = TestHelper.randomSphericalPoints(n, 1.0);
         tester.test(coords, null);
       }
     }
@@ -65,7 +65,7 @@ class QuickHull3DTest {
     for (int n = 20; n < 200; n += 10) { // System.out.println (n);
       for (int i = 0; i < 10; i++) {
         QuickHull3DHelper tester = new QuickHull3DHelper();
-        double[] coords = tester.randomCubedPoints(n, 1.0, 0.5);
+        double[] coords = TestHelper.randomCubedPoints(n, 1.0, 0.5);
         tester.test(coords, null);
       }
     }
@@ -77,7 +77,7 @@ class QuickHull3DTest {
     for (int n = 2; n <= 10; n++) { // System.out.println (n*n*n);
       for (int i = 0; i < 10; i++) {
         QuickHull3DHelper tester = new QuickHull3DHelper();
-        double[] coords = tester.randomGridPoints(n, 4.0);
+        double[] coords = TestHelper.randomGridPoints(n, 4.0);
         tester.test(coords, null);
       }
     }
@@ -86,7 +86,7 @@ class QuickHull3DTest {
   @RepeatedTest(10)
   void testFails0() {
     QuickHull3DHelper tester = new QuickHull3DHelper();
-    double[] coords = tester.randomDegeneratePoints(10, 0);
+    double[] coords = TestHelper.randomDegeneratePoints(10, 0);
     QuickHull3D hull = new QuickHull3D(coords);
     Exception exception = assertThrows(Exception.class, () -> hull.buildHull());
     assertEquals(exception.getMessage(), "Input points appear to be coincident");
@@ -95,7 +95,7 @@ class QuickHull3DTest {
   @RepeatedTest(10)
   void testFails1() {
     QuickHull3DHelper tester = new QuickHull3DHelper();
-    double[] coords = tester.randomDegeneratePoints(10, 1);
+    double[] coords = TestHelper.randomDegeneratePoints(10, 1);
     QuickHull3D hull = new QuickHull3D(coords);
     Exception exception = assertThrows(Exception.class, () -> hull.buildHull());
     assertEquals(exception.getMessage(), "Input points appear to be colinear");
@@ -104,7 +104,7 @@ class QuickHull3DTest {
   @RepeatedTest(10)
   void testFails2() {
     QuickHull3DHelper tester = new QuickHull3DHelper();
-    double[] coords = tester.randomDegeneratePoints(10, 2);
+    double[] coords = TestHelper.randomDegeneratePoints(10, 2);
     QuickHull3D hull = new QuickHull3D(coords);
     Exception exception = assertThrows(Exception.class, () -> hull.buildHull());
     assertEquals(exception.getMessage(), "Input points appear to be coplanar");
