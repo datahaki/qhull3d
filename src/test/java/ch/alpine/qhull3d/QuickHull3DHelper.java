@@ -105,14 +105,14 @@ public class QuickHull3DHelper {
     }
   }
 
-  void test(double[] coords, int[][] checkFaces) {
+  void test(double[] coords) {
     double[][] rpyList = new double[][] { { 0, 0, 0 }, { 10, 20, 30 }, { -45, 60, 91 }, { 125, 67, 81 } };
     double[] xcoords = new double[coords.length];
-    singleTest(coords, checkFaces);
+    singleTest(coords, null);
     if (testRotation) {
       for (double[] rpy : rpyList) {
         TestHelper.rotateCoords(xcoords, coords, Math.toRadians(rpy[0]), Math.toRadians(rpy[1]), Math.toRadians(rpy[2]));
-        singleTest(xcoords, checkFaces);
+        singleTest(xcoords, null);
       }
     }
   }

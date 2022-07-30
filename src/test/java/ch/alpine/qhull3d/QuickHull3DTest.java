@@ -24,7 +24,7 @@ class QuickHull3DTest {
         5, 10, 15, };
     QuickHull3DHelper tester = new QuickHull3DHelper();
     tester.debugEnable = true;
-    tester.test(coords, null);
+    tester.test(coords);
   }
 
   @Test
@@ -32,7 +32,7 @@ class QuickHull3DTest {
     double[] coords = new double[] { 0.0, 0.0, 0.0, 21.0, 0.0, 0.0, 0.0, 21.0, 0.0, 2.0, 1.0, 2.0, 17.0, 2.0, 3.0, 1.0, 19.0, 6.0, 4.0, 3.0, 5.0, 13.0, 4.0,
         5.0, 3.0, 15.0, 8.0, 6.0, 5.0, 6.0, 9.0, 6.0, 11.0, };
     QuickHull3DHelper tester = new QuickHull3DHelper();
-    tester.test(coords, null);
+    tester.test(coords);
   }
 
   @Test
@@ -42,7 +42,7 @@ class QuickHull3DTest {
       for (int i = 0; i < 10; i++) {
         QuickHull3DHelper tester = new QuickHull3DHelper();
         double[] coords = TestHelper.randomPoints(n, 1.0);
-        tester.test(coords, null);
+        tester.test(coords);
       }
     }
   }
@@ -54,7 +54,7 @@ class QuickHull3DTest {
       for (int i = 0; i < 10; i++) {
         QuickHull3DHelper tester = new QuickHull3DHelper();
         double[] coords = TestHelper.randomSphericalPoints(n, 1.0);
-        tester.test(coords, null);
+        tester.test(coords);
       }
     }
   }
@@ -66,7 +66,7 @@ class QuickHull3DTest {
       for (int i = 0; i < 10; i++) {
         QuickHull3DHelper tester = new QuickHull3DHelper();
         double[] coords = TestHelper.randomCubedPoints(n, 1.0, 0.5);
-        tester.test(coords, null);
+        tester.test(coords);
       }
     }
   }
@@ -78,7 +78,7 @@ class QuickHull3DTest {
       for (int i = 0; i < 10; i++) {
         QuickHull3DHelper tester = new QuickHull3DHelper();
         double[] coords = TestHelper.randomGridPoints(n, 4.0);
-        tester.test(coords, null);
+        tester.test(coords);
       }
     }
   }

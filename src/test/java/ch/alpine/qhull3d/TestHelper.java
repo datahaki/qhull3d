@@ -4,7 +4,6 @@ import java.util.Random;
 
 enum TestHelper {
   ;
-
   /** Returns the coordinates for <code>num</code> points whose x, y, and
    * z values are randomly chosen within a given range.
    *
