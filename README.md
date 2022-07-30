@@ -4,11 +4,12 @@ Java 17 adaptation of quickhull3d code by John E. Lloyd
 
 The modifications include
 
-* suggestions by IntelliJ IDE
-* suggestions by Eclipse IDE
 * remove unused functions
 * reordering of functions inside classes
+* remove option to triangulate output
+* remove option to orient faces clockwise
 * strict separation of main and test scope
+* suggestions by Eclipse and IntelliJ IDEs
 
 ## Integration
 

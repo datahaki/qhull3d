@@ -31,20 +31,14 @@ public class QuickHull3DHelper {
   static private final double DOUBLE_PREC = 2.2204460492503131e-16;
   static boolean doTesting = true;
   static boolean doTiming = false;
-  static final boolean debugEnable = false;
+  boolean debugEnable = false;
   static final int NO_DEGENERACY = 0;
   static final int EDGE_DEGENERACY = 1;
   static final int VERTEX_DEGENERACY = 2;
-  final Random rand; // random number generator
+  static final Random RANDOM = new Random(); // random number generator
   static final boolean testRotation = true;
   static final int degeneracyTest = VERTEX_DEGENERACY;
   static final double epsScale = 2.0;
-
-  /** Creates a testing object. */
-  public QuickHull3DHelper() {
-    rand = new Random();
-    rand.setSeed(0x1234);
-  }
 
   /** Returns true if two face index sets are equal,
    * modulo a cyclical permuation.
@@ -52,7 +46,7 @@ public class QuickHull3DHelper {
    * @param indices1 index set for first face
    * @param indices2 index set for second face
    * @return true if the index sets are equivalent */
-  public boolean faceIndicesEqual(int[] indices1, int[] indices2) {
+  public static boolean faceIndicesEqual(int[] indices1, int[] indices2) {
     if (indices1.length != indices2.length) {
       return false;
     }
@@ -80,20 +74,20 @@ public class QuickHull3DHelper {
    * @param num number of points to produce
    * @param range coordinate values will lie between -range and range
    * @return array of coordinate values */
-  public double[] randomPoints(int num, double range) {
+  public static double[] randomPoints(int num, double range) {
     double[] coords = new double[num * 3];
     for (int i = 0; i < num; i++) {
       for (int k = 0; k < 3; k++) {
-        coords[i * 3 + k] = 2 * range * (rand.nextDouble() - 0.5);
+        coords[i * 3 + k] = 2 * range * (RANDOM.nextDouble() - 0.5);
       }
     }
     return coords;
   }
 
-  private void randomlyPerturb(Vector3d pnt, double tol) {
-    pnt.x += tol * (rand.nextDouble() - 0.5);
-    pnt.y += tol * (rand.nextDouble() - 0.5);
-    pnt.z += tol * (rand.nextDouble() - 0.5);
+  private static void randomlyPerturb(Vector3d pnt, double tol) {
+    pnt.x += tol * (RANDOM.nextDouble() - 0.5);
+    pnt.y += tol * (RANDOM.nextDouble() - 0.5);
+    pnt.z += tol * (RANDOM.nextDouble() - 0.5);
   }
 
   /** Returns the coordinates for <code>num</code> randomly
@@ -104,11 +98,11 @@ public class QuickHull3DHelper {
    * @param dimen dimensionality of degeneracy: 0 = coincident,
    * 1 = colinear, 2 = coplaner.
    * @return array of coordinate values */
-  public double[] randomDegeneratePoints(int num, int dimen) {
+  public static double[] randomDegeneratePoints(int num, int dimen) {
     double[] coords = new double[num * 3];
     Vector3d pnt = new Vector3d();
     Vector3d base = new Vector3d();
-    QuickHull3DHelper.setRandom(base, -1, 1, rand);
+    QuickHull3DHelper.setRandom(base, -1, 1, RANDOM);
     double tol = DOUBLE_PREC;
     if (dimen == 0) {
       for (int i = 0; i < num; i++) {
@@ -120,10 +114,10 @@ public class QuickHull3DHelper {
       }
     } else if (dimen == 1) {
       Vector3d u = new Vector3d();
-      QuickHull3DHelper.setRandom(u, -1, 1, rand);
+      QuickHull3DHelper.setRandom(u, -1, 1, RANDOM);
       u.normalize();
       for (int i = 0; i < num; i++) {
-        double a = 2 * (rand.nextDouble() - 0.5);
+        double a = 2 * (RANDOM.nextDouble() - 0.5);
         pnt.scale(a, u);
         pnt.add(base);
         randomlyPerturb(pnt, tol);
@@ -134,11 +128,11 @@ public class QuickHull3DHelper {
     } else // dimen == 2
     {
       Vector3d nrm = new Vector3d();
-      QuickHull3DHelper.setRandom(nrm, -1, 1, rand);
+      QuickHull3DHelper.setRandom(nrm, -1, 1, RANDOM);
       nrm.normalize();
       for (int i = 0; i < num; i++) { // compute a random point and project it to the plane
         Vector3d perp = new Vector3d();
-        QuickHull3DHelper.setRandom(pnt, -1, 1, rand);
+        QuickHull3DHelper.setRandom(pnt, -1, 1, RANDOM);
         perp.scale(pnt.dot(nrm), nrm);
         pnt.sub(perp);
         pnt.add(base);
@@ -157,11 +151,11 @@ public class QuickHull3DHelper {
    * @param num number of points to produce
    * @param radius radius of the sphere
    * @return array of coordinate values */
-  public double[] randomSphericalPoints(int num, double radius) {
+  public static double[] randomSphericalPoints(int num, double radius) {
     double[] coords = new double[num * 3];
     Vector3d pnt = new Vector3d();
     for (int i = 0; i < num;) {
-      QuickHull3DHelper.setRandom(pnt, -radius, radius, rand);
+      QuickHull3DHelper.setRandom(pnt, -radius, radius, RANDOM);
       if (pnt.norm() <= radius) {
         coords[i * 3 + 0] = pnt.x;
         coords[i * 3 + 1] = pnt.y;
@@ -185,11 +179,11 @@ public class QuickHull3DHelper {
    * @param max maximum absolute value to which the coordinates
    * are clipped
    * @return array of coordinate values */
-  public double[] randomCubedPoints(int num, double range, double max) {
+  public static double[] randomCubedPoints(int num, double range, double max) {
     double[] coords = new double[num * 3];
     for (int i = 0; i < num; i++) {
       for (int k = 0; k < 3; k++) {
-        double x = 2 * range * (rand.nextDouble() - 0.5);
+        double x = 2 * range * (RANDOM.nextDouble() - 0.5);
         if (x > max) {
           x = max;
         } else if (x < -max) {
@@ -201,11 +195,11 @@ public class QuickHull3DHelper {
     return coords;
   }
 
-  private void shuffleCoords(double[] coords) {
+  private static void shuffleCoords(double[] coords) {
     int num = coords.length / 3;
     for (int i = 0; i < num; i++) {
-      int i1 = rand.nextInt(num);
-      int i2 = rand.nextInt(num);
+      int i1 = RANDOM.nextInt(num);
+      int i2 = RANDOM.nextInt(num);
       for (int k = 0; k < 3; k++) {
         double tmp = coords[i1 * 3 + k];
         coords[i1 * 3 + k] = coords[i2 * 3 + k];
@@ -223,7 +217,7 @@ public class QuickHull3DHelper {
    * @param width distance between each point along a particular
    * direction
    * @return array of coordinate values */
-  public double[] randomGridPoints(int gridSize, double width) {
+  public static double[] randomGridPoints(int gridSize, double width) {
     // gridSize gives the number of points across a given dimension
     // any given coordinate indexed by i has value
     // (i/(gridSize-1) - 0.5)*width
@@ -269,7 +263,7 @@ public class QuickHull3DHelper {
     double eps = hull.getDistanceTolerance();
     for (int i = 0; i < faces.length; i++) {
       // random point on an edge
-      lam[0] = rand.nextDouble();
+      lam[0] = RANDOM.nextDouble();
       lam[1] = 1 - lam[0];
       lam[2] = 0.0;
       if (type == VERTEX_DEGENERACY && (i % 2 == 0)) {
@@ -279,7 +273,7 @@ public class QuickHull3DHelper {
       for (int j = 0; j < 3; j++) {
         int vtxi = faces[i][j];
         for (int k = 0; k < 3; k++) {
-          coordsx[numv * 3 + k] += lam[j] * coords[vtxi * 3 + k] + epsScale * eps * (rand.nextDouble() - 0.5);
+          coordsx[numv * 3 + k] += lam[j] * coords[vtxi * 3 + k] + epsScale * eps * (RANDOM.nextDouble() - 0.5);
         }
       }
       numv++;
@@ -303,7 +297,7 @@ public class QuickHull3DHelper {
       throw new RuntimeException();
   }
 
-  void rotateCoords(double[] res, double[] xyz, double roll, double pitch, double yaw) {
+  static void rotateCoords(double[] res, double[] xyz, double roll, double pitch, double yaw) {
     double sroll = Math.sin(roll);
     double croll = Math.cos(roll);
     double spitch = Math.sin(pitch);
@@ -326,33 +320,10 @@ public class QuickHull3DHelper {
     }
   }
 
-  void printCoords(double[] coords) {
+  static void printCoords(double[] coords) {
     int nump = coords.length / 3;
     for (int i = 0; i < nump; i++) {
       System.out.println(coords[i * 3 + 0] + ", " + coords[i * 3 + 1] + ", " + coords[i * 3 + 2] + ", ");
-    }
-  }
-
-  void testException(double[] coords, String msg) {
-    QuickHull3D hull = new QuickHull3D(coords);
-    Exception ex = null;
-    try {
-      hull.buildHull();
-    } catch (Exception e) {
-      ex = e;
-    }
-    if (ex == null) {
-      System.out.println("Expected exception " + msg);
-      System.out.println("Got no exception");
-      System.out.println("Input pnts:");
-      printCoords(coords);
-      throw new RuntimeException();
-    } else if (ex.getMessage() == null || !ex.getMessage().equals(msg)) {
-      System.out.println("Expected exception " + msg);
-      System.out.println("Got exception " + ex.getMessage());
-      System.out.println("Input pnts:");
-      printCoords(coords);
-      throw new RuntimeException();
     }
   }
 
@@ -366,66 +337,6 @@ public class QuickHull3DHelper {
         singleTest(xcoords, checkFaces);
       }
     }
-  }
-
-  /** Runs a set of explicit and random tests on QuickHull3D,
-   * and prints <code>Passed</code> to System.out if all is well. */
-  public void explicitAndRandomTests() {
-    try {
-      double[] coords = null;
-      System.out.println("Testing degenerate input ...");
-      for (int dimen = 0; dimen < 3; dimen++) {
-        for (int i = 0; i < 10; i++) {
-          coords = randomDegeneratePoints(10, dimen);
-          if (dimen == 0) {
-            testException(coords, "Input points appear to be coincident");
-          } else if (dimen == 1) {
-            testException(coords, "Input points appear to be colinear");
-          } else if (dimen == 2) {
-            testException(coords, "Input points appear to be coplanar");
-          }
-        }
-      }
-      System.out.println("Explicit tests ...");
-      // test cases furnished by Mariano Zelke, Berlin
-      coords = new double[] { 21, 0, 0, 0, 21, 0, 0, 0, 0, 18, 2, 6, 1, 18, 5, 2, 1, 3, 14, 3, 10, 4, 14, 14, 3, 4, 10, 10, 6, 12, 5, 10, 15, };
-      test(coords, null);
-      coords = new double[] { 0.0, 0.0, 0.0, 21.0, 0.0, 0.0, 0.0, 21.0, 0.0, 2.0, 1.0, 2.0, 17.0, 2.0, 3.0, 1.0, 19.0, 6.0, 4.0, 3.0, 5.0, 13.0, 4.0, 5.0, 3.0,
-          15.0, 8.0, 6.0, 5.0, 6.0, 9.0, 6.0, 11.0, };
-      test(coords, null);
-      System.out.println("Testing 20 to 200 random points ...");
-      for (int n = 20; n < 200; n += 10) { // System.out.println (n);
-        for (int i = 0; i < 10; i++) {
-          coords = randomPoints(n, 1.0);
-          test(coords, null);
-        }
-      }
-      System.out.println("Testing 20 to 200 random points in a sphere ...");
-      for (int n = 20; n < 200; n += 10) { // System.out.println (n);
-        for (int i = 0; i < 10; i++) {
-          coords = randomSphericalPoints(n, 1.0);
-          test(coords, null);
-        }
-      }
-      System.out.println("Testing 20 to 200 random points clipped to a cube ...");
-      for (int n = 20; n < 200; n += 10) { // System.out.println (n);
-        for (int i = 0; i < 10; i++) {
-          coords = randomCubedPoints(n, 1.0, 0.5);
-          test(coords, null);
-        }
-      }
-      System.out.println("Testing 8 to 1000 randomly shuffled points on a grid ...");
-      for (int n = 2; n <= 10; n++) { // System.out.println (n*n*n);
-        for (int i = 0; i < 10; i++) {
-          coords = randomGridPoints(n, 4.0);
-          test(coords, null);
-        }
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new RuntimeException();
-    }
-    System.out.println("\nPassed\n");
   }
 
   /** Runs timing tests on QuickHull3D, and prints

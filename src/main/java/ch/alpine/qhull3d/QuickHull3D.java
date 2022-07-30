@@ -109,6 +109,8 @@ public class QuickHull3D {
    * than four, or the points appear to be coincident, colinear, or
    * coplanar. */
   public QuickHull3D(double[] coords) throws IllegalArgumentException {
+    if (coords.length % 3 != 0)
+      throw new IllegalArgumentException();
     int nump = coords.length / 3;
     if (nump < 4)
       throw new IllegalArgumentException("Less than four input points specified");
