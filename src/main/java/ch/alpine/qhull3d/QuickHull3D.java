@@ -424,22 +424,20 @@ public class QuickHull3D {
 
   private void deleteFacePoints(Face face, Face absorbingFace) {
     Vertex faceVtxs = removeAllPointsFromFace(face);
-    if (faceVtxs != null) {
-      if (absorbingFace == null) {
+    if (faceVtxs != null)
+      if (absorbingFace == null)
         unclaimed.addAll(faceVtxs);
-      } else {
+      else {
         Vertex vtxNext = faceVtxs;
         for (Vertex vtx = vtxNext; vtx != null; vtx = vtxNext) {
           vtxNext = vtx.next;
           double dist = absorbingFace.distanceToPlane(vtx.pnt);
-          if (dist > tolerance) {
+          if (dist > tolerance)
             addPointToFace(vtx, absorbingFace);
-          } else {
+          else
             unclaimed.add(vtx);
-          }
         }
       }
-    }
   }
 
   private static double oppFaceDistance(HalfEdge he) {
@@ -453,9 +451,8 @@ public class QuickHull3D {
       Face oppFace = hedge.oppositeFace();
       boolean merge = false;
       if (mergeType.equals(MergeType.NONCONVEX)) { // then merge faces if they are definitively non-convex
-        if (oppFaceDistance(hedge) > -tolerance || oppFaceDistance(hedge.opposite) > -tolerance) {
+        if (oppFaceDistance(hedge) > -tolerance || oppFaceDistance(hedge.opposite) > -tolerance)
           merge = true;
-        }
       } else { // NONCONVEX_WRT_LARGER_FACE
         // merge faces if they are parallel or non-convex
         // wrt to the larger face; otherwise, just mark
@@ -475,14 +472,12 @@ public class QuickHull3D {
         }
       }
       if (merge) {
-        if (debug) {
+        if (debug)
           System.out.println("  merging " + face.getVertexString() + "  and  " + oppFace.getVertexString());
-        }
         for (Face discardedFace : face.mergeAdjacentFace(hedge))
           deleteFacePoints(discardedFace, face);
-        if (debug) {
+        if (debug)
           System.out.println("  result: " + face.getVertexString());
-        }
         return true;
       }
       hedge = hedge.next();
@@ -507,9 +502,9 @@ public class QuickHull3D {
     do {
       Face oppFace = edge.oppositeFace();
       if (oppFace.mark == Face.VISIBLE) {
-        if (oppFace.distanceToPlane(eyePnt) > tolerance) {
+        if (oppFace.distanceToPlane(eyePnt) > tolerance)
           calculateHorizon(eyePnt, edge.getOpposite(), oppFace, horizon);
-        } else {
+        else {
           horizon.add(edge);
           if (debug) {
             System.out.println("  adding horizon edge " + edge.getVertexString());
