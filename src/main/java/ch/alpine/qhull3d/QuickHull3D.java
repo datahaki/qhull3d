@@ -307,7 +307,7 @@ public class QuickHull3D {
     max.set(pointBuffer[0].pnt);
     min.set(pointBuffer[0].pnt);
     for (int i = 1; i < numPoints; i++) {
-      Point3d pnt = pointBuffer[i].pnt;
+      Vector3d pnt = pointBuffer[i].pnt;
       if (pnt.x > max.x) {
         max.x = pnt.x;
         maxVtxs[0] = pointBuffer[i];
@@ -465,8 +465,8 @@ public class QuickHull3D {
   /** Returns the vertex points in this hull.
    *
    * @return array of vertex points */
-  public Point3d[] getVertices() {
-    Point3d[] vtxs = new Point3d[numVertices];
+  public Vector3d[] getVertices() {
+    Vector3d[] vtxs = new Vector3d[numVertices];
     for (int i = 0; i < numVertices; i++)
       vtxs[i] = pointBuffer[vertexPointIndices[i]].pnt;
     return vtxs;
@@ -641,7 +641,7 @@ public class QuickHull3D {
     return false;
   }
 
-  private void calculateHorizon(Point3d eyePnt, HalfEdge edge0, Face face, List<HalfEdge> horizon) {
+  private void calculateHorizon(Vector3d eyePnt, HalfEdge edge0, Face face, List<HalfEdge> horizon) {
     // oldFaces.add (face);
     deleteFacePoints(face, null);
     face.mark = Face.DELETED;
@@ -885,7 +885,7 @@ public class QuickHull3D {
     }
     // check point inclusion
     for (int i = 0; i < numPoints; i++) {
-      Point3d pnt = pointBuffer[i].pnt;
+      Vector3d pnt = pointBuffer[i].pnt;
       for (Face face : faces)
         if (face.mark == Face.VISIBLE) {
           dist = face.distanceToPlane(pnt);

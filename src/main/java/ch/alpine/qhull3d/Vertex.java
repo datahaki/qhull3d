@@ -6,7 +6,7 @@ package ch.alpine.qhull3d;
  * @author John E. Lloyd, Fall 2004 */
 class Vertex {
   /** Spatial point associated with this vertex. */
-  final Point3d pnt;
+  final Vector3d pnt;
   /** Back index into an array. */
   int index;
   /** List forward link. */
@@ -18,6 +18,6 @@ class Vertex {
 
   /** Constructs a vertex and sets its coordinates to 0. */
   public Vertex() {
-    pnt = new Point3d();
+    pnt = new Vector3d();
   }
 }

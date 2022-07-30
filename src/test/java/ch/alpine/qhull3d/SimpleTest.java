@@ -22,8 +22,8 @@ class SimpleTest {
     QuickHull3D hull = new QuickHull3D();
     hull.build(points);
     System.out.println("Vertices:");
-    Point3d[] vertices = hull.getVertices();
-    for (Point3d pnt : vertices) {
+    Vector3d[] vertices = hull.getVertices();
+    for (Vector3d pnt : vertices) {
       System.out.println(pnt.x + " " + pnt.y + " " + pnt.z);
     }
     System.out.println("Faces:");

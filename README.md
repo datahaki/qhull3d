@@ -6,6 +6,7 @@ The modifications include
 
 * suggestions by IntelliJ IDE
 * suggestions by Eclipse IDE
+* remove unused functions
 * reordering of functions inside classes
 * strict separation of main and test scope
 

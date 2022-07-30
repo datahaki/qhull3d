@@ -91,7 +91,7 @@ public class QuickHull3DHelper {
     return coords;
   }
 
-  private void randomlyPerturb(Point3d pnt, double tol) {
+  private void randomlyPerturb(Vector3d pnt, double tol) {
     pnt.x += tol * (rand.nextDouble() - 0.5);
     pnt.y += tol * (rand.nextDouble() - 0.5);
     pnt.z += tol * (rand.nextDouble() - 0.5);
@@ -107,8 +107,8 @@ public class QuickHull3DHelper {
    * @return array of coordinate values */
   public double[] randomDegeneratePoints(int num, int dimen) {
     double[] coords = new double[num * 3];
-    Point3d pnt = new Point3d();
-    Point3d base = new Point3d();
+    Vector3d pnt = new Vector3d();
+    Vector3d base = new Vector3d();
     QuickHull3DHelper.setRandom(base, -1, 1, rand);
     double tol = DOUBLE_PREC;
     if (dimen == 0) {
@@ -160,7 +160,7 @@ public class QuickHull3DHelper {
    * @return array of coordinate values */
   public double[] randomSphericalPoints(int num, double radius) {
     double[] coords = new double[num * 3];
-    Point3d pnt = new Point3d();
+    Vector3d pnt = new Vector3d();
     for (int i = 0; i < num;) {
       QuickHull3DHelper.setRandom(pnt, -radius, radius, rand);
       if (pnt.norm() <= radius) {

@@ -54,7 +54,7 @@ class Face {
   HalfEdge he0;
   private final Vector3d normal;
   double area;
-  private final Point3d centroid;
+  private final Vector3d centroid;
   double planeOffset;
   int index;
   int numVerts;
@@ -64,11 +64,11 @@ class Face {
 
   public Face() {
     normal = new Vector3d();
-    centroid = new Point3d();
+    centroid = new Vector3d();
     mark = VISIBLE;
   }
 
-  public void computeCentroid(Point3d centroid) {
+  public void computeCentroid(Vector3d centroid) {
     centroid.setZero();
     HalfEdge he = he0;
     do {
@@ -94,8 +94,8 @@ class Face {
         }
         hedge = hedge.next;
       } while (hedge != he0);
-      Point3d p2 = hedgeMax.head().pnt;
-      Point3d p1 = hedgeMax.tail().pnt;
+      Vector3d p2 = hedgeMax.head().pnt;
+      Vector3d p1 = hedgeMax.tail().pnt;
       double lenMax = Math.sqrt(lenSqrMax);
       double ux = (p2.x - p1.x) / lenMax;
       double uy = (p2.y - p1.y) / lenMax;
@@ -111,8 +111,8 @@ class Face {
   public void computeNormal(Vector3d normal) {
     HalfEdge he1 = he0.next;
     HalfEdge he2 = he1.next;
-    Point3d p0 = he0.head().pnt;
-    Point3d p2 = he1.head().pnt;
+    Vector3d p0 = he0.head().pnt;
+    Vector3d p2 = he1.head().pnt;
     double d2x = p2.x - p0.x;
     double d2y = p2.y - p0.y;
     double d2z = p2.z - p0.z;
@@ -183,7 +183,7 @@ class Face {
    *
    * @param p the point
    * @return distance from the point to the plane */
-  public double distanceToPlane(Point3d p) {
+  public double distanceToPlane(Vector3d p) {
     return normal.x * p.x + normal.y * p.y + normal.z * p.z - planeOffset;
   }
 
@@ -194,7 +194,7 @@ class Face {
     return normal;
   }
 
-  public Point3d getCentroid() {
+  public Vector3d getCentroid() {
     return centroid;
   }
 
