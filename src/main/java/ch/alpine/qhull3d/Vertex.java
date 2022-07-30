@@ -8,7 +8,7 @@ class Vertex {
   /** Spatial point associated with this vertex. */
   final Vector3d pnt = new Vector3d();
   /** Back index into an array. */
-  int index;
+  final int index;
   /** List forward link. */
   Vertex prev;
   /** List backward link. */
