@@ -2,6 +2,8 @@ package ch.alpine.qhull3d;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 /** Simple example usage of QuickHull3D. Run as the command
@@ -23,11 +25,11 @@ class SimpleTest {
         0.0, 2.0, 0.0, };
     QuickHull3D hull = new QuickHull3D(points);
     hull.buildHull();
-    int[][] faceIndices = hull.getFaces();
-    assertArrayEquals(faceIndices[0], new int[] { 2, 4, 0 });
-    assertArrayEquals(faceIndices[1], new int[] { 6, 2, 0 });
-    assertArrayEquals(faceIndices[2], new int[] { 6, 0, 4 });
-    assertArrayEquals(faceIndices[3], new int[] { 6, 4, 2 });
+    List<int[]> faceIndices = hull.getFaces();
+    assertArrayEquals(faceIndices.get(0), new int[] { 2, 4, 0 });
+    assertArrayEquals(faceIndices.get(1), new int[] { 6, 2, 0 });
+    assertArrayEquals(faceIndices.get(2), new int[] { 6, 0, 4 });
+    assertArrayEquals(faceIndices.get(3), new int[] { 6, 4, 2 });
   }
 
   @Test

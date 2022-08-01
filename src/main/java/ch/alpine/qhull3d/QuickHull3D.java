@@ -90,7 +90,7 @@ public class QuickHull3D {
   private final Vertex[] pointBuffer;
   private final Vertex[] maxVtxs = new Vertex[3];
   private final Vertex[] minVtxs = new Vertex[3];
-  private final List<Face> faces = new ArrayList<>(16);
+  private final List<Face> faces = new ArrayList<>();
   private final VertexList unclaimed = new VertexList();
   private final VertexList claimed = new VertexList();
   /** estimated size of the point set */
@@ -355,7 +355,7 @@ public class QuickHull3D {
         tris[i + 1].getEdge(2).setOpposite(tris[0].getEdge((3 - i) % 3));
       }
     }
-    faces.addAll(Arrays.asList(tris).subList(0, 4));
+    faces.addAll(Arrays.asList(tris));
     for (int i = 0; i < numPoints(); i++) {
       Vertex v = pointBuffer[i];
       if (v == vtx[0] || v == vtx[1] || v == vtx[2] || v == vtx[3])
@@ -377,19 +377,13 @@ public class QuickHull3D {
   /** Returns the faces associated with this hull.
    *
    * <p>Each face is represented by an integer array which gives the indices of
-   * the vertices. By default, these indices are numbered with respect to the
-   * input points, are zero-based, and are arranged counter-clockwise.
+   * the vertices. The indices are numbered with respect to the input points,
+   * are zero-based, and are arranged counter-clockwise.
    *
-   * @param indexFlags specifies index characteristics (0 results
-   * in the default)
-   * @return array of integer arrays, giving the vertex
-   * indices for each face. */
-  public int[][] getFaces() {
-    int[][] allFaces = new int[faces.size()][];
-    int k = 0;
-    for (Face face : faces)
-      allFaces[k++] = face.getIndices();
-    return allFaces;
+   * @param indexFlags specifies index characteristics (0 results in the default)
+   * @return array of integer arrays, giving the vertex indices for each face. */
+  public List<int[]> getFaces() {
+    return faces.stream().map(Face::getIndices).toList();
   }
 
   private void resolveUnclaimedPoints(FaceList newFaces) {
@@ -490,9 +484,8 @@ public class QuickHull3D {
   private void calculateHorizon(Vector3d eyePnt, HalfEdge edge0, Face face, List<HalfEdge> horizon) {
     deleteFacePoints(face, null);
     face.mark = Face.DELETED;
-    if (debug) {
+    if (debug)
       System.out.println("  visiting face " + face.getVertexString());
-    }
     HalfEdge edge;
     if (edge0 == null) {
       edge0 = face.getEdge(0);
@@ -506,9 +499,8 @@ public class QuickHull3D {
           calculateHorizon(eyePnt, edge.getOpposite(), oppFace, horizon);
         else {
           horizon.add(edge);
-          if (debug) {
+          if (debug)
             System.out.println("  adding horizon edge " + edge.getVertexString());
-          }
         }
       }
       edge = edge.next();
@@ -528,14 +520,12 @@ public class QuickHull3D {
     HalfEdge hedgeSideBegin = null;
     for (HalfEdge horizonHe : horizon) {
       HalfEdge hedgeSide = addAdjoiningFace(eyeVtx, horizonHe);
-      if (debug) {
+      if (debug)
         System.out.println("new face: " + hedgeSide.face.getVertexString());
-      }
-      if (hedgeSidePrev != null) {
+      if (hedgeSidePrev != null)
         hedgeSide.next().setOpposite(hedgeSidePrev);
-      } else {
+      else
         hedgeSideBegin = hedgeSide;
-      }
       newFaces.add(hedgeSide.getFace());
       hedgeSidePrev = hedgeSide;
     }
@@ -597,22 +587,19 @@ public class QuickHull3D {
       // make sure edge is convex
       dist = oppFaceDistance(he);
       if (dist > tol) {
-        if (ps != null) {
+        if (ps != null)
           ps.println("Edge " + he.getVertexString() + " non-convex by " + dist);
-        }
         return false;
       }
       dist = oppFaceDistance(he.opposite);
       if (dist > tol) {
-        if (ps != null) {
+        if (ps != null)
           ps.println("Opposite edge " + he.opposite.getVertexString() + " non-convex by " + dist);
-        }
         return false;
       }
       if (he.next().oppositeFace() == he.oppositeFace()) {
-        if (ps != null) {
+        if (ps != null)
           ps.println("Redundant vertex " + he.head().index + " in face " + face.getVertexString());
-        }
         return false;
       }
       he = he.next();

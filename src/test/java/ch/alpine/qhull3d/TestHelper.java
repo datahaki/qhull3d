@@ -1,5 +1,6 @@
 package ch.alpine.qhull3d;
 
+import java.util.List;
 import java.util.Random;
 
 enum TestHelper {
@@ -179,12 +180,12 @@ enum TestHelper {
 
   public static double[] addDegeneracy(int type, double[] coords, QuickHull3D hull) {
     int numv = coords.length / 3;
-    int[][] faces = hull.getFaces();
-    double[] coordsx = new double[coords.length + faces.length * 3];
+    List<int[]> faces = hull.getFaces();
+    double[] coordsx = new double[coords.length + faces.size() * 3];
     System.arraycopy(coords, 0, coordsx, 0, coords.length);
     double[] lam = new double[3];
     double eps = hull.getDistanceTolerance();
-    for (int i = 0; i < faces.length; i++) {
+    for (int i = 0; i < faces.size(); i++) {
       // random point on an edge
       lam[0] = RANDOM.nextDouble();
       lam[1] = 1 - lam[0];
@@ -194,7 +195,7 @@ enum TestHelper {
         lam[1] = lam[2] = 0;
       }
       for (int j = 0; j < 3; j++) {
-        int vtxi = faces[i][j];
+        int vtxi = faces.get(i)[j];
         for (int k = 0; k < 3; k++) {
           coordsx[numv * 3 + k] += lam[j] * coords[vtxi * 3 + k] + epsScale * eps * (RANDOM.nextDouble() - 0.5);
         }
