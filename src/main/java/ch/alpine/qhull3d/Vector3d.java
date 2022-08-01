@@ -112,17 +112,6 @@ class Vector3d {
     return x * x + y * y + z * z;
   }
 
-  /** Returns the squared of the Euclidean distance between this vector
-   * and vector v.
-   *
-   * @return squared distance between this vector and v */
-  public double distanceSquared(Vector3d v) {
-    double dx = x - v.x;
-    double dy = y - v.y;
-    double dz = z - v.z;
-    return dx * dx + dy * dy + dz * dz;
-  }
-
   /** Returns the dot product of this vector and v1.
    *
    * @param v1 right-hand vector

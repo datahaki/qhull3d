@@ -56,7 +56,7 @@ import java.util.List;
  *
  * <h3>Merged Faces</h3> The merging of faces means that the faces returned by
  * QuickHull3D may be convex polygons instead of triangles. If triangles are
- * desired, the application may {@link #triangulate triangulate} the faces, but
+ * desired, the application may the faces, but
  * it should be noted that this may result in triangles which are very small or
  * thin and hence difficult to perform reliable convexity tests on. In other
  * words, triangulating a merged face is likely to restore the numerical
@@ -93,8 +93,6 @@ public class QuickHull3D {
   private final List<Face> faces = new ArrayList<>();
   private final VertexList unclaimed = new VertexList();
   private final VertexList claimed = new VertexList();
-  /** estimated size of the point set */
-  private double charLength;
   private boolean debug = false;
   private double explicitTolerance = AUTOMATIC_TOLERANCE;
   private double tolerance;
@@ -253,7 +251,8 @@ public class QuickHull3D {
     }
     // this epsilon formula comes from QuickHull, and I'm
     // not about to quibble.
-    charLength = Math.max(max.x - min.x, max.y - min.y);
+    /** estimated size of the point set */
+    double charLength = Math.max(max.x - min.x, max.y - min.y);
     charLength = Math.max(max.z - min.z, charLength);
     if (explicitTolerance == AUTOMATIC_TOLERANCE) {
       tolerance = 3 * StaticHelper.DOUBLE_PREC * //
@@ -435,7 +434,7 @@ public class QuickHull3D {
   }
 
   private static double oppFaceDistance(HalfEdge he) {
-    return he.face.distanceToPlane(he.opposite.face.getCentroid());
+    return he.face.distanceToPlane(he.opposite.face.centroid());
   }
 
   private boolean doAdjacentMerge(Face face, MergeType mergeType) {

@@ -47,7 +47,8 @@ class QuickHull3DTest {
   void testFails0() {
     double[] coords = TestHelper.randomDegeneratePoints(10, 0);
     QuickHull3D hull = new QuickHull3D(coords);
-    Exception exception = assertThrows(Exception.class, () -> hull.buildHull());
+    Exception exception = assertThrows(Exception.class, hull::buildHull);
+    // jan: from time to time the exception will have a different message with "colinear"
     assertEquals(exception.getMessage(), "Input points appear to be coincident");
   }
 
@@ -55,7 +56,7 @@ class QuickHull3DTest {
   void testFails1() {
     double[] coords = TestHelper.randomDegeneratePoints(10, 1);
     QuickHull3D hull = new QuickHull3D(coords);
-    Exception exception = assertThrows(Exception.class, () -> hull.buildHull());
+    Exception exception = assertThrows(Exception.class, hull::buildHull);
     assertEquals(exception.getMessage(), "Input points appear to be colinear");
   }
 
@@ -63,7 +64,7 @@ class QuickHull3DTest {
   void testFails2() {
     double[] coords = TestHelper.randomDegeneratePoints(10, 2);
     QuickHull3D hull = new QuickHull3D(coords);
-    Exception exception = assertThrows(Exception.class, () -> hull.buildHull());
+    Exception exception = assertThrows(Exception.class, hull::buildHull);
     assertEquals(exception.getMessage(), "Input points appear to be coplanar");
   }
 

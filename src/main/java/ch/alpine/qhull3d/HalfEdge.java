@@ -96,7 +96,7 @@ class HalfEdge {
    *
    * @return tail vertex */
   public Vertex tail() {
-    return prev != null ? prev.vertex : null;
+    return prev.vertex;
   }
 
   /** Returns the opposite triangular face associated with this
@@ -104,7 +104,7 @@ class HalfEdge {
    *
    * @return opposite triangular face */
   public Face oppositeFace() {
-    return opposite != null ? opposite.face : null;
+    return opposite.face;
   }
 
   /** Produces a string identifying this half-edge by the point
@@ -115,14 +115,5 @@ class HalfEdge {
     if (tail() != null)
       return "" + tail().index + "-" + head().index;
     return "?-" + head().index;
-  }
-
-  /** Returns the length squared of this half-edge.
-   *
-   * @return half-edge length squared */
-  public double lengthSquared() {
-    if (tail() != null)
-      return head().pnt.distanceSquared(tail().pnt);
-    return -1;
   }
 }

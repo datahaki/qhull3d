@@ -33,10 +33,6 @@ class Face {
    * @param v1 second vertex
    * @param v2 third vertex */
   public static Face createTriangle(Vertex v0, Vertex v1, Vertex v2) {
-    return createTriangle(v0, v1, v2, 0);
-  }
-
-  private static Face createTriangle(Vertex v0, Vertex v1, Vertex v2, double minArea) {
     Face face = new Face();
     HalfEdge he0 = new HalfEdge(v0, face);
     HalfEdge he1 = new HalfEdge(v1, face);
@@ -49,7 +45,7 @@ class Face {
     he2.next(he0);
     face.he0 = he0;
     // compute the normal and offset
-    face.computeNormalAndCentroid(minArea);
+    face.computeNormalAndCentroid();
     return face;
   }
 
@@ -70,7 +66,13 @@ class Face {
     mark = VISIBLE;
   }
 
-  public void computeCentroid(Vector3d centroid) {
+  private void computeNormalAndCentroid() {
+    computeNormal(normal);
+    computeCentroid(centroid);
+    planeOffset = normal.dot(centroid);
+  }
+
+  private void computeCentroid(Vector3d centroid) {
     centroid.setZero();
     HalfEdge he = he0;
     do {
@@ -80,37 +82,7 @@ class Face {
     centroid.scale(1.0 / numVerts);
   }
 
-  public void computeNormal(Vector3d normal, double minArea) {
-    computeNormal(normal);
-    if (area < minArea) {
-      // make the normal more robust by removing
-      // components parallel to the longest edge
-      HalfEdge hedgeMax = null;
-      double lenSqrMax = 0;
-      HalfEdge hedge = he0;
-      do {
-        double lenSqr = hedge.lengthSquared();
-        if (lenSqr > lenSqrMax) {
-          hedgeMax = hedge;
-          lenSqrMax = lenSqr;
-        }
-        hedge = hedge.next();
-      } while (hedge != he0);
-      Vector3d p2 = hedgeMax.head().pnt;
-      Vector3d p1 = hedgeMax.tail().pnt;
-      double lenMax = Math.sqrt(lenSqrMax);
-      double ux = (p2.x - p1.x) / lenMax;
-      double uy = (p2.y - p1.y) / lenMax;
-      double uz = (p2.z - p1.z) / lenMax;
-      double dot = normal.x * ux + normal.y * uy + normal.z * uz;
-      normal.x -= dot * ux;
-      normal.y -= dot * uy;
-      normal.z -= dot * uz;
-      normal.normalize();
-    }
-  }
-
-  public void computeNormal(Vector3d normal) {
+  private void computeNormal(Vector3d normal) {
     HalfEdge he1 = he0.next();
     HalfEdge he2 = he1.next();
     Vector3d p0 = he0.head().pnt;
@@ -132,31 +104,22 @@ class Face {
       normal.y += d1z * d2x - d1x * d2z;
       normal.z += d1x * d2y - d1y * d2x;
       he2 = he2.next();
-      numVerts++;
+      ++numVerts;
     }
     area = normal.norm();
     normal.scale(1 / area);
   }
 
-  private void computeNormalAndCentroid() {
-    computeNormal(normal);
-    computeCentroid(centroid);
-    planeOffset = normal.dot(centroid);
+  private void updateNormalAndCentroid() {
+    computeNormalAndCentroid();
     int numv = 0;
     HalfEdge he = he0;
     do {
       numv++;
       he = he.next();
     } while (he != he0);
-    if (numv != numVerts) {
+    if (numv != numVerts)
       throw new RuntimeException("face " + getVertexString() + " numVerts=" + numVerts + " should be " + numv);
-    }
-  }
-
-  private void computeNormalAndCentroid(double minArea) {
-    computeNormal(normal, minArea);
-    computeCentroid(centroid);
-    planeOffset = normal.dot(centroid);
   }
 
   /** Gets the i-th half-edge associated with the face.
@@ -185,7 +148,7 @@ class Face {
     return normal.x * p.x + normal.y * p.y + normal.z * p.z - planeOffset;
   }
 
-  public Vector3d getCentroid() {
+  public Vector3d centroid() {
     return centroid;
   }
 
@@ -232,7 +195,7 @@ class Face {
       hedge.opposite = hedgeOpp;
       hedgeOpp.opposite = hedge;
       // oppFace was modified, so need to recompute
-      oppFace.computeNormalAndCentroid();
+      oppFace.updateNormalAndCentroid();
     } else {
       hedgePrev.next(hedge);
       hedge.prev(hedgePrev);
@@ -308,7 +271,7 @@ class Face {
     discardedFace = connectHalfEdges(hedgeAdjPrev, hedgeOppNext);
     if (discardedFace != null)
       discarded.add(discardedFace);
-    computeNormalAndCentroid();
+    updateNormalAndCentroid();
     checkConsistency();
     return discarded;
   }
